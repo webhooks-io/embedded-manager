@@ -1,0 +1,43 @@
+window.wh = {
+	buildOpts: function(token, opts) {
+        var frmParams = ["width","height","src","token","element_id"];
+
+		if (typeof (opts.width) == 'undefined' || typeof (opts.width) != 'number' ) {
+            opts.width = 500;
+        }
+        if (typeof (opts.height) == 'undefined' || typeof (opts.height) != 'number' ) {
+            opts.height = 500;
+        }
+        if (typeof (opts.src) == 'undefined' || typeof (opts.src) != 'string' ) {
+            opts.src = 'http://embedded.dev.webhooks.io/';
+        }
+        if (typeof (token) == 'undefined' || typeof (token) != 'string' ) {
+            token = '';
+        }
+
+        opts.src += '?token=' + token;
+
+        for(var key in opts) {
+            if(frmParams.indexOf(key) == -1) {
+                opts.src += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(opts[key]);
+            }
+        }
+
+        
+        //opts.token = token;
+        return opts;
+	},
+	display: function(token, opts) {
+		var params = this.buildOpts(token, opts);
+
+		var frm = document.createElement('iframe');
+		frm.id = 'webhooksio-embedded';
+		frm.setAttribute('src',params.src);
+        //frm.setAttribute('src','');
+        frm.frameBorder = 0;
+		frm.style.height = params.height + 'px';
+        frm.style.width = '100%';
+		document.getElementById(params.element_id).appendChild(frm);
+	}
+
+}

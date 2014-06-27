@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="webhooksio" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="webhooksio" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="webhooksio" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="webhooksio" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="css/font-awesome.min.css" >
+  <link rel="stylesheet" href="css/app.css"/>
+  <base href="/">
+</head>
+<body>
+
+  <div class="container-fluid" ng-controller="WebhookCtrl" ng-cloak>
+    <div class="row">
+      <!--
+      <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+          <li><a ng-click="changePage('dashboard')"><i class="fa fa-home"></i> Home</a></li>
+          <li><a ng-click="changePage('dashboard')"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+          <li><a ng-click="changePage('subscriptions')"><i class="fa fa-reply"></i> Webhooks</a></li>
+          <li><a ng-click="changePage('logs')"><i class="fa fa-book"></i> Logs</a></li>
+        </ul>
+      </div>
+    -->
+        <ul class="nav nav-tabs nav-justified">
+          <li><a ng-click="changePage('dashboard')"><i class="fa fa-home"></i> Home</a></li>
+          <li><a ng-click="changePage('dashboard')"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+          <li><a ng-click="changePage('subscriptions')"><i class="fa fa-reply"></i> Webhooks</a></li>
+          <li><a ng-click="changePage('logs')"><i class="fa fa-book"></i> Logs</a></li>
+        </ul>
+      </div>
+    <div class="row">
+
+      <div class="col-sm-12 col-md-12" ng-switch="currentview">
+          <span ng-switch-when="dashboard"><div data-ng-include data-src="'partials/dashboard.html'"></div></span>
+          <span ng-switch-when="subscriptions"><div data-ng-include data-src="'partials/subscriptions.html'"></div></span></span>
+          <span ng-switch-when="logs"><div data-ng-include data-src="'partials/logs.html'"></div></span>
+      </div>
+    </div>
+  </div>
+  
+
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted text-center">&copy; 2014 webhooks.io. Embedded Hooks v<span app-version></span></p>
+    </div>
+  </div>
+
+  <!-- JQuery -->
+  <script src="js/libs/jquery.min.js"></script>
+
+  <!-- Bootstrap -->
+  <script src="js/libs/bootstrap.min.js"></script>
+
+  <!-- AngularJS -->
+  <script src="js/libs/angular.min.js"></script>
+
+  <!-- App -->
+  <script src="js/app.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/directives.js"></script>
+</body>
+</html>
