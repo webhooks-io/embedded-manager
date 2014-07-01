@@ -37,9 +37,9 @@
     <div class="row">
 
       <div class="col-sm-12 col-md-12" ng-switch="currentview">
-          <span ng-switch-when="dashboard"><div data-ng-include data-src="'partials/dashboard.html'"></div></span>
-          <span ng-switch-when="subscriptions"><div data-ng-include data-src="'partials/subscriptions.html'"></div></span></span>
-          <span ng-switch-when="logs"><div data-ng-include data-src="'partials/logs.html'"></div></span>
+          <span ng-switch-when="dashboard"><div data-ng-include data-src="'partials/dashboard.html'" onload="resizeFrame()"></div></span>
+          <span ng-switch-when="subscriptions"><div data-ng-include data-src="'partials/subscriptions.html'" onload="resizeFrame()"></div></span></span>
+          <span ng-switch-when="logs"><div data-ng-include data-src="'partials/logs.html'" onload="resizeFrame()"></div></span>
       </div>
     </div>
   </div>

@@ -1,3 +1,4 @@
+var origin = 'http://embedded.dev.webhooks.io';
 window.wh = {
 	buildOpts: function(token, opts) {
         var frmParams = ["width","height","src","token","element_id"];
@@ -9,7 +10,7 @@ window.wh = {
             opts.height = 500;
         }
         if (typeof (opts.src) == 'undefined' || typeof (opts.src) != 'string' ) {
-            opts.src = 'http://embedded.dev.webhooks.io/';
+            opts.src = origin + '/';
         }
         if (typeof (token) == 'undefined' || typeof (token) != 'string' ) {
             token = '';
@@ -35,9 +36,26 @@ window.wh = {
 		frm.setAttribute('src',params.src);
         //frm.setAttribute('src','');
         frm.frameBorder = 0;
-		frm.style.height = params.height + 'px';
+        frm.marginWidth = 0;
+        frm.marginHeight = 0;
+        frm.scrolling = 'no';
+		//frm.style.height = params.height + 'px';
         frm.style.width = '100%';
 		document.getElementById(params.element_id).appendChild(frm);
+       // Create browser compatible event handler.
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+        // Listen for a message from the iframe.
+        eventer(messageEvent, function(e) {
+            //console.log('Resize to: ' + e.data);
+        if (e.origin !== origin || isNaN(e.data)) return;
+            document.getElementById(frm.id).style.height = e.data + 'px';
+        }, false);
+
 	}
 
 }
+
+

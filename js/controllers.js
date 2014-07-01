@@ -9,8 +9,13 @@ angular.module('webhooksio.controllers', [])
     $scope.currentview = $page;
   }
 
-    
-
+  $scope.resizeFrame = function(){
+    // If there are any additional elements added, we will need to resize again...
+    var container_height = $('.container-fluid').height();
+    var footer_height = $('#footer').height();
+    var height = container_height + footer_height + 5;
+    parent.postMessage(height, '*');
+  }
 
   $scope.getURLParams = function() {
 
@@ -29,7 +34,7 @@ angular.module('webhooksio.controllers', [])
 
   //Default Values
   $scope.currentview='dashboard';
-  $scope.urlbase = 'http://api.dev.webhooks.io';
+  $scope.urlbase = 'http://api.dev.webhooks.io'
   $scope.apiversion = 'v1';
   $scope.account_id = $scope.params.account_id;
   $scope.application_id = $scope.params.application_id;
