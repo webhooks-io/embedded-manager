@@ -29,10 +29,10 @@
       </div>
     -->
         <ul class="nav nav-tabs">
-          <li><a ng-click="changePage('dashboard')"><i class="fa fa-home"></i> Home</a></li>
           <li><a ng-click="changePage('dashboard')"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-          <li><a ng-click="changePage('subscriptions')"><i class="fa fa-reply"></i> Webhooks</a></li>
+          <li><a ng-click="changePage('subscriptions')"><i class="fa fa-road"></i> Destinations</a></li>
           <li><a ng-click="changePage('logs')"><i class="fa fa-book"></i> Logs</a></li>
+          <li><a ng-click="changePage('docs')"><i class="fa fa-code"></i> Docs</a></li>
         </ul>
       </div>
     <div class="row">
@@ -41,16 +41,18 @@
           <span ng-switch-when="dashboard"><div data-ng-include data-src="'partials/dashboard.html'" onload="resizeFrame()"></div></span>
           <span ng-switch-when="subscriptions"><div data-ng-include data-src="'partials/subscriptions.html'" onload="resizeFrame()"></div></span></span>
           <span ng-switch-when="logs"><div data-ng-include data-src="'partials/logs.html'" onload="resizeFrame()"></div></span>
+          <span ng-switch-when="docs"><div data-ng-include data-src="'partials/docs.html'" onload="resizeFrame()"></div></span>
       </div>
     </div>
   </div>
   
-
+<!--
   <div id="footer">
     <div class="container">
       <p class="text-muted text-center">&copy; 2014 webhooks.io. Embedded Hooks v<span app-version></span></p>
     </div>
   </div>
+-->
 
   <!-- JQuery -->
   <script src="js/libs/jquery.min.js"></script>
