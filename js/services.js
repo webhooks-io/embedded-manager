@@ -30,10 +30,10 @@ angular.module('webhooksio.services', [])
                     return result;
                });
           },
-          getOutputs:  function($urlbase, $apiversion, $account_id, $application_id, $consumer_id) {
+          getOutputs:  function($urlbase, $apiversion, $account_id, $application_id, $consumer_id, $postparams) {
                $http.defaults.useXDomain = true;
                delete $http.defaults.headers.common['X-Requested-With'];
-               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs').success(function(result) {
+               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs?bucket_key=' + $bucket_key ).success(function(result) {
                     return result.data;
                }).error(function(result, status) {
                     return result;
