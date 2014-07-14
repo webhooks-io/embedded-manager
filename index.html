@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="css/font-awesome.min.css" >
+  <link rel="stylesheet" href="css/parsley.css"/>
+  <link rel="stylesheet" href="css/gritter.css"/>
   <link rel="stylesheet" href="css/app.css"/>
 
   <base href="/">
@@ -20,7 +22,7 @@
     <div class="row">
         <ul class="nav nav-tabs">
           <li ng-class="{active:currentview == 'dashboard'}"><a ng-click="changePage('dashboard')"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-          <li ng-class="{active:currentview == 'destinations'}"><a ng-click="changePage('destinations')"><i class="fa fa-road"></i> Destinations</a></li>
+          <li ng-class="{active:currentview == 'destinations' || currentview == 'adddestination' || currentview == 'editdestination'}"><a ng-click="changePage('destinations')"><i class="fa fa-road"></i> Destinations</a></li>
           <li ng-class="{active:currentview == 'logs'}"><a ng-click="changePage('logs')"><i class="fa fa-book"></i> Logs</a></li>
           <li ng-class="{active:currentview == 'docs'}"><a ng-click="changePage('docs')"><i class="fa fa-code"></i> Docs</a></li>
         </ul>
@@ -31,8 +33,11 @@
       <div class="col-sm-12 col-md-12" ng-switch="currentview">
           <span ng-switch-when="dashboard"><view-dashboard></view-dashboard></span>
           <span ng-switch-when="destinations"><view-destinations></view-destinations></span>
+          <span ng-switch-when="adddestination"><add-destination></add-destination></span>
+          <span ng-switch-when="editdestination"><edit-destination></edit-destination></span>
           <span ng-switch-when="logs"><view-logs></view-logs></span>
           <span ng-switch-when="docs"><view-docs></view-docs></span>
+          
       </div>
       
     </div>
@@ -54,6 +59,12 @@
 
   <!-- AngularJS -->
   <script src="js/libs/angular.min.js"></script>
+
+  <!-- Parsley -->
+  <script src="js/libs/parsley.min.js"></script>
+
+  <!-- Gritter -->
+  <script src="js/libs/gritter.js"></script>
 
   <!-- App -->
   <script src="js/app.js"></script>

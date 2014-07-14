@@ -53,4 +53,24 @@ angular.module('webhooksio.directives', []).
           scope.resizeFrame();
         }
       }
+    })
+    .directive('addDestination', function() {
+      return {
+        replace: true,
+        restrict: 'AEC',
+        templateUrl: "/partials/destination-add.html",
+        link: function(scope, elem, attrs) {
+          scope.resizeFrame();
+        }
+      }
+    })
+    .directive('editDestination', function() {
+      return {
+        replace: true,
+        restrict: 'AEC',
+        templateUrl: "/partials/destination-edit.html",
+        link: function(scope, elem, attrs) {
+          scope.resizeFrame();
+        }
+      }
     });

@@ -24,16 +24,26 @@ angular.module('webhooksio.services', [])
                $http.defaults.useXDomain = true;
                $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
                delete $http.defaults.headers.common['X-Requested-With'];
-               return $http.post($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs', postparams).success(function(result) {
+               return $http.post($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs', $postparams).success(function(result) {
                     return result.data;
                }).error(function(result, status) {
                     return result;
                });
           },
-          getOutputs:  function($urlbase, $apiversion, $account_id, $application_id, $consumer_id, $postparams) {
+          getOutputs:  function($urlbase, $apiversion, $account_id, $application_id, $consumer_id, $bucket_key) {
                $http.defaults.useXDomain = true;
                delete $http.defaults.headers.common['X-Requested-With'];
                return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs?bucket_key=' + $bucket_key ).success(function(result) {
+                    return result.data;
+               }).error(function(result, status) {
+                    return result;
+
+               });
+          },
+          getOutput:  function($urlbase, $apiversion, $account_id, $application_id, $consumer_id, $bucket_key, $output_id) {
+               $http.defaults.useXDomain = true;
+               delete $http.defaults.headers.common['X-Requested-With'];
+               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs/' + $output_id + '?bucket_key=' + $bucket_key ).success(function(result) {
                     return result.data;
                }).error(function(result, status) {
                     return result;
@@ -44,7 +54,7 @@ angular.module('webhooksio.services', [])
                $http.defaults.useXDomain = true;
                $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
                delete $http.defaults.headers.common['X-Requested-With'];
-               return $http.put($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs/' + $output_id, postparams).success(function(result) {
+               return $http.put($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs/' + $output_id, $postparams).success(function(result) {
                     return result.data;
                }).error(function(result, status) {
                     return result;
@@ -54,6 +64,36 @@ angular.module('webhooksio.services', [])
                $http.defaults.useXDomain = true;
                delete $http.defaults.headers.common['X-Requested-With'];
                return $http.delete($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs/' + $output_id).success(function(result) {
+                    return result.data;
+               }).error(function(result, status) {
+                    return result;
+
+               });
+          },
+          getAppVersion: function($urlbase, $apiversion, $account_id, $application_id, $application_version_id) {
+               $http.defaults.useXDomain = true;
+               delete $http.defaults.headers.common['X-Requested-With'];
+               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/versions/' + $application_version_id).success(function(result) {
+                    return result.data;
+               }).error(function(result, status) {
+                    return result;
+
+               });
+          },
+          getAuthOptions: function($urlbase, $apiversion) {
+               $http.defaults.useXDomain = true;
+               delete $http.defaults.headers.common['X-Requested-With'];
+               return $http.get($urlbase + '/' + $apiversion + '/gateway/authentication/input').success(function(result) {
+                    return result.data;
+               }).error(function(result, status) {
+                    return result;
+
+               });
+          },
+          getRetryPolicies: function($urlbase, $apiversion) {
+               $http.defaults.useXDomain = true;
+               delete $http.defaults.headers.common['X-Requested-With'];
+               return $http.get($urlbase + '/' + $apiversion + '/retry_policies').success(function(result) {
                     return result.data;
                }).error(function(result, status) {
                     return result;

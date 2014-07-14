@@ -10,12 +10,21 @@ var app = angular.module('webhooksio', [
 ]);
 
 app.run(function ($rootScope) {
-	$rootScope.resizeFrame = function() {
-		// If there are any additional elements added, we will need to resize again...
-    	var container_height = $('.container-fluid').height();
-    	var footer_height = $('#footer').height();
-    	var height = container_height + footer_height + 5;
-    	parent.postMessage(height, '*');
-	}
+
+
+  $rootScope.resizeFrame = function() {
+    // If there are any additional elements added, we will need to resize again...
+      var container_height = $('.container-fluid').height();
+      var footer_height = $('#footer').height();
+      var height = container_height + footer_height + 1000;
+      window.parent.postMessage(height, '*');
+  }
+
+	
+
+  $rootScope.showMessage = function($opts) {
+    $.gritter.add($opts);
+  }
+
 });
  

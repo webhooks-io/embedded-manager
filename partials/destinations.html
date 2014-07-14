@@ -1,33 +1,21 @@
 <div ng-controller="DestinationCtrl">
 	<h2>Event Destinations</h2>
+	<div><a class="btn btn-success" ng-click="changePage('adddestination')"><i class="fa fa-plus"></i> New Event Destination</a>
 	<table class="table table-striped">
 		<thead>
 		<tr>
-			<th>Event</th>
+			<th>Name</th>
+			<th>Event(s)</th>
 			<th>Destination URI</th>
 			<th>Status</th>
 		</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td><strong><a href="">client.create</a></strong></td>
-				<td>https://myapp.webhooks.io/incoming/client</td>
-				<td class="success text-center">active</td>
-			</tr>
-			<tr>
-				<td><strong><a href="">client.create</a></strong></td>
-				<td>https://crm.webhooks.io/incoming/client</td>
-				<td class="warning text-center">paused</td>
-			</tr>
-			<tr>
-				<td><strong><a href="">client.update</a></strong></td>
-				<td>https://myapp.webhooks.io/incoming/client</td>
-				<td class="success text-center">active</td>
-			</tr>
-			<tr>
-				<td><strong><a href="">client.delete</a></strong></td>
-				<td>https://myapp.webhooks.io/incoming/client</td>
-				<td class="success text-center">active</td>
+			<tr ng-repeat="output in outputs">
+				<td><strong><a href="javascript:void(0);" ng-click="changePage('editdestination',output.output_id)">{{output.name}}</a></strong></td>
+				<td><strong>{{output.event_filters}}</strong></td>
+				<td>{{output.endpoint_url}}</td>
+				<td class="success text-center">{{output.status}}</td>
 			</tr>
 		</tbody>
 	</table>
