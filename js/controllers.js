@@ -338,7 +338,10 @@ angular.module('webhooksio.controllers', [])
               consumerService.getOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key, $scope.output_id).success(function(data) {
                     $scope.name = data.name;
                     $scope.version_id = data.application_version_id;
-                    $scope.event = data.event_filter;
+                    if(data.event_filters.length) {
+                      $scope.event = data.event_filters[0];
+                    }
+                    $scope.email_address = data.alert_on_failure;
                     $scope.endpoint_url = data.endpoint_url;
                     $scope.delivery_order = data.delivery_order;
                     $scope.transformation = data.transformation;
@@ -483,7 +486,7 @@ angular.module('webhooksio.controllers', [])
                //Set the params into a JSON string
                var postdata =  $.param({
                     bucket_key: $scope.bucket_key,
-                    application_version_id: $scope.application_version_id,
+                    application_version_id: $scope.version_id,
                     name: $scope.name,
                     endpoint_url : $scope.endpoint_url,
                     delivery_order : $scope.delivery_order,
@@ -493,7 +496,8 @@ angular.module('webhooksio.controllers', [])
                     retry_count : $scope.retry_count,
                     authentication : $scope.authproperties,
                     verify_ssl : $scope.verify_ssl,
-                    event_filter : $scope.event
+                    event_filters : $scope.event,
+                    alert_on_failure : $scope.email_address
                });
                
                consumerService.updateOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.output_id, postdata).success(function(data) {
@@ -511,6 +515,19 @@ angular.module('webhooksio.controllers', [])
 
     $scope.cancel = function() {
       $scope.changePage('destinations');
+    }
+
+
+    $scope.delete = function($output_id) {
+       consumerService.deleteOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $output_id).success(function(data) {
+            $scope.showMessage({title:'Success', text: 'The destination has been deleted!'});
+            $scope.changePage('destinations');
+       }).error(function(data) {
+            $scope.message = data.message || "Request failed";
+            $scope.messagedetails = data.message_detail;
+            $scope.showError = true;
+            $scope.resizeFrame();
+       });
     }
   
    

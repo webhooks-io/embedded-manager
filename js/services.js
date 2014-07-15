@@ -52,7 +52,7 @@ angular.module('webhooksio.services', [])
           },
           updateOutput:  function($urlbase, $apiversion, $account_id, $application_id, $consumer_id, $output_id, $postparams) {
                $http.defaults.useXDomain = true;
-               $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+               $http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
                delete $http.defaults.headers.common['X-Requested-With'];
                return $http.put($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs/' + $output_id, $postparams).success(function(result) {
                     return result.data;
@@ -60,7 +60,7 @@ angular.module('webhooksio.services', [])
                     return result;
                });
           },
-          deleteOutput: function($urlbase, $apiversion, $account_id, $application_id, $consumer_id) {
+          deleteOutput: function($urlbase, $apiversion, $account_id, $application_id, $consumer_id, $output_id) {
                $http.defaults.useXDomain = true;
                delete $http.defaults.headers.common['X-Requested-With'];
                return $http.delete($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/consumers/' + $consumer_id + '/outputs/' + $output_id).success(function(result) {

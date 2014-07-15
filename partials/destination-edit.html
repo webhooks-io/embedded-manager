@@ -78,9 +78,15 @@
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label>Failure Notification Email</label>
+                    <input type="email" class="form-control" data-type="email" data-required="true" name="email_address" id="email_address" ng-model="email_address"> 
+                </div>
+
             
                 <button type="submit" class="btn btn-sm btn-success">Update Destination</button>
                 <button type="button" class="btn btn-sm btn-default" ng-click="cancel()">Cancel</button>
+                <button type="button" class="btn btn-sm btn-danger pull-right" ng-click="delete(output_id)">Delete Destination</button>
             </form>
 
 </div>
