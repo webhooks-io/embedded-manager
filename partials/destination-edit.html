@@ -18,6 +18,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Webhook Version</label>
+                    <select ng-model="version_id" ng-options="y.version_id as y.key for y in versions" class="form-control" data-parsley-required="true"><option value=""></option></select>
+                </div>
+
+                <div class="form-group">
                     <label>Event</label>
                     <select ng-model="event" ng-options="y.key as y.label for y in events" class="form-control" data-parsley-required="true"><option value=""></option></select>
                 </div>

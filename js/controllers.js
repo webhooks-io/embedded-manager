@@ -37,7 +37,6 @@ angular.module('webhooksio.controllers', [])
   $scope.apiversion = 'v1';
   $scope.account_id = $scope.params.account_id;
   $scope.application_id = $scope.params.application_id;
-  $scope.application_version_id = $scope.params.application_version_id;
   $scope.consumer_id = $scope.params.consumer_id;
   $scope.api_token = $scope.params.token;
   $scope.bucket_key = $scope.params.bucket_key;
@@ -57,6 +56,7 @@ angular.module('webhooksio.controllers', [])
 
   //Get the list of events:
   consumerService.getOutputs($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
+    console.log(data);
     $scope.outputs = data.outputs; 
   }).error(function(data) {
         $scope.message = data.message || "Request failed";
@@ -83,12 +83,14 @@ angular.module('webhooksio.controllers', [])
   $scope.verify_ssl_options = [{option: 'true',name: 'Yes - ensure SSL cert is valid'}, {option: 'false',name: 'No - bypass validation checks on SSL cert'}];
 
   //Get Application Events
-  consumerService.getAppVersion($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.application_version_id).success(function(data) {
-        for(var i=0; i<data.version_json.events.options.length;i++) {
-          for(var x=0; x<data.version_json.events.options[i].events.length;x++) {
-            $scope.events.push(data.version_json.events.options[i].events[x]);
-          }
-        }
+  consumerService.getAppVersions($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id).success(function(data) {
+    $scope.versions = [];
+    for(var v=0; v<data.versions.length; v++) {
+      if(data.versions[v].active) {
+        $scope.versions.push(data.versions[v]);
+      }
+    }
+    $scope.application_version_id = $scope.versions[($scope.versions.length-1)].version_id;
   }).error(function(data) {
         $scope.message = data.message || "Request failed";
         $scope.messagedetails = data.message_detail;
@@ -116,6 +118,23 @@ angular.module('webhooksio.controllers', [])
         $scope.message = data.message || "Request failed";
         $scope.messagedetails = data.message_detail;
         $scope.showError = true;
+   });
+
+
+   $scope.$watch('version_id', function(newVal) {
+        if (newVal) {
+             for(var v=0; v<$scope.versions.length; v++) {
+                if($scope.versions[v].version_id == newVal) {
+                  for(var i=0; i<$scope.versions[v].version_json.events.options.length;i++) {
+                    for(var x=0; x<$scope.versions[v].version_json.events.options[i].events.length;x++) {
+                      $scope.events.push($scope.versions[v].version_json.events.options[i].events[x]);
+                    }
+                  }
+                }
+              }
+        } else {
+             $scope.events = []; 
+        }
    });
 
 
@@ -208,7 +227,8 @@ angular.module('webhooksio.controllers', [])
                     retry_count : $scope.retry_count,
                     authentication : $scope.authproperties,
                     verify_ssl : $scope.verify_ssl,
-                    event_filter : $scope.event
+                    event_filters : $scope.event,
+                    alert_on_failure : $scope.email_address
                });
                
                consumerService.createOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, postdata).success(function(data) {
@@ -252,72 +272,99 @@ angular.module('webhooksio.controllers', [])
   $scope.verify_ssl_options = [{option: 'true',name: 'Yes - ensure SSL cert is valid'}, {option: 'false',name: 'No - bypass validation checks on SSL cert'}];
 
   //Get Application Events
-  consumerService.getAppVersion($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.application_version_id).success(function(data) {
-        for(var i=0; i<data.version_json.events.options.length;i++) {
-          for(var x=0; x<data.version_json.events.options[i].events.length;x++) {
-            $scope.events.push(data.version_json.events.options[i].events[x]);
-          }
-        }
-  }).error(function(data) {
-        $scope.message = data.message || "Request failed";
-        $scope.messagedetails = data.message_detail;
-        $scope.showError = true;
-  });
-
-  //Get Auth Options Events
-  consumerService.getAuthOptions($scope.urlbase, $scope.apiversion).success(function(data) {
-      $scope.authoptionList = data;
-      $scope.authoptions = [];
-      for (var key in data) {
-           data[key].type = key;
-           $scope.authoptions.push(data[key]);
+  consumerService.getAppVersions($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id).success(function(data) {
+    $scope.versions = [];
+    for(var v=0; v<data.versions.length; v++) {
+      if(data.versions[v].active) {
+        $scope.versions.push(data.versions[v]);
       }
-  }).error(function(data) {
-      $scope.message = data.message || "Request failed";
-      $scope.messagedetails = data.message_detail;
-      $scope.showError = true;
-  });
+    }
 
-  consumerService.getRetryPolicies($scope.urlbase, $scope.apiversion).success(function(data) {
-        $scope.policies = data.policies;
-        $scope.show_policy_details = false;
-   }).error(function(data) {
+
+    //Get Auth Options Events
+    consumerService.getAuthOptions($scope.urlbase, $scope.apiversion).success(function(data) {
+        $scope.authoptionList = data;
+        $scope.authoptions = [];
+        for (var key in data) {
+             data[key].type = key;
+             $scope.authoptions.push(data[key]);
+        }
+
+        //Get retry Policies
+        consumerService.getRetryPolicies($scope.urlbase, $scope.apiversion).success(function(data) {
+              $scope.policies = data.policies;
+              $scope.show_policy_details = false;
+
+
+              //Get Output
+              consumerService.getOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key, $scope.output_id).success(function(data) {
+                    $scope.name = data.name;
+                    $scope.version_id = data.application_version_id;
+                    $scope.event = data.event_filter;
+                    $scope.endpoint_url = data.endpoint_url;
+                    $scope.delivery_order = data.delivery_order;
+                    $scope.transformation = data.transformation;
+                    $scope.retry_policy_id = data.retry_policy_id;
+                    $scope.retry_count = data.retry_count;
+                    $scope.retry_interval = data.retry_interval;
+                    
+                    if(data.verify_ssl){
+                         $scope.verify_ssl = data.verify_ssl;
+                    }else{
+                         $scope.verify_ssl = "true";
+                    }
+                    $scope.authentication_type = data.authentication.type;
+                    $scope.date_created = data.date_created;
+                    $scope.date_updated = data.date_updated;
+                    if(data.authentication.properties) {
+                         for(var i=0; i < data.authentication.properties.length; i++) {
+                              for(var property in data.authentication.properties[i]) {
+                                   $scope.authproperties[property] = data.authentication.properties[i][property];
+                              }
+                         }
+                    }
+               }).error(function(data) {
+                    $scope.message = data.message || "Request failed";
+                    $scope.messagedetails = data.message_detail;
+               });
+
+
+
+         }).error(function(data) {
+              $scope.message = data.message || "Request failed";
+              $scope.messagedetails = data.message_detail;
+              $scope.showError = true;
+         });
+
+
+    }).error(function(data) {
         $scope.message = data.message || "Request failed";
         $scope.messagedetails = data.message_detail;
         $scope.showError = true;
-   });
+    });
 
 
-   consumerService.getOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key, $scope.output_id).success(function(data) {
-        console.log(data);
-          $scope.name = data.name;
-          $scope.endpoint_url = data.endpoint_url;
-          $scope.delivery_order = data.delivery_order;
-          $scope.transformation = data.transformation;
-          $scope.retry_policy_id = data.retry_policy_id;
-          $scope.retry_count = data.retry_count;
-          $scope.retry_interval = data.retry_interval;
-          
-          if(data.verify_ssl){
-               $scope.verify_ssl = data.verify_ssl;
-          }else{
-               $scope.verify_ssl = "true";
-          }
-          $scope.authentication_type = data.authentication.type;
-          $scope.date_created = $scope.formatDate(data.date_created);
-          $scope.date_updated = $scope.formatDate(data.date_updated);
-          if(data.authentication.properties) {
-               for(var i=0; i < data.authentication.properties.length; i++) {
-                    for(property in data.authentication.properties[i]) {
-                         $scope.authproperties[property] = data.authentication.properties[i][property];
+  }).error(function(data) {
+        $scope.message = data.message || "Request failed";
+        $scope.messagedetails = data.message_detail;
+        $scope.showError = true;
+  });
+
+  $scope.$watch('version_id', function(newVal) {
+        if (newVal) {
+             for(var v=0; v<$scope.versions.length; v++) {
+                if($scope.versions[v].version_id == newVal) {
+                  for(var i=0; i<$scope.versions[v].version_json.events.options.length;i++) {
+                    for(var x=0; x<$scope.versions[v].version_json.events.options[i].events.length;x++) {
+                      $scope.events.push($scope.versions[v].version_json.events.options[i].events[x]);
                     }
-               }
-          }
-     }).error(function(data) {
-          $scope.message = data.message || "Request failed";
-          $scope.messagedetails = data.message_detail;
-     });
-
+                  }
+                }
+              }
+        } else {
+             $scope.events = []; 
+        }
+   });
 
    $scope.$watch('authentication_type', function(newVal) {
         if (newVal && $scope.authoptionList[newVal].properties) {
@@ -357,7 +404,7 @@ angular.module('webhooksio.controllers', [])
         $( '#retry_count' ).parsley( 'removeConstraint', 'maxcheck' );
         $( '#retry_interval' ).parsley( 'removeConstraint', 'maxcheck' );
         if(newVal) {
-             for(var i=0;i<$scope.policies.length;i++) {
+             for(var i=0; i<$scope.policies.length;i++) {
                   if($scope.policies[i].policy_id == newVal) {
                        if($scope.policies[i].max_retry_count == null){
                             $scope.show_policy_details = false;

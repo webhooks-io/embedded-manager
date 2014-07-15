@@ -70,10 +70,10 @@ angular.module('webhooksio.services', [])
 
                });
           },
-          getAppVersion: function($urlbase, $apiversion, $account_id, $application_id, $application_version_id) {
+          getAppVersions: function($urlbase, $apiversion, $account_id, $application_id) {
                $http.defaults.useXDomain = true;
                delete $http.defaults.headers.common['X-Requested-With'];
-               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/versions/' + $application_version_id).success(function(result) {
+               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/applications/' + $application_id + '/versions/').success(function(result) {
                     return result.data;
                }).error(function(result, status) {
                     return result;
