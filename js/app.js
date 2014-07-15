@@ -16,7 +16,8 @@ app.run(function ($rootScope) {
     // If there are any additional elements added, we will need to resize again...
       var container_height = $('.container-fluid').height();
       var footer_height = $('#footer').height();
-      var height = container_height + footer_height + 1000;
+      var adjust = 0;
+      var height = container_height + footer_height + adjust;
       window.parent.postMessage(height, '*');
   }
 

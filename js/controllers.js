@@ -17,6 +17,12 @@ angular.module('webhooksio.controllers', [])
 
   }
 
+  // handles resizing the window if anything changes...
+  $scope.$watch(function() {
+    $scope.resizeFrame();
+  });
+
+  
   $scope.changePage = function($page, $id) {
     $scope.passedid = $id;
     $scope.currentview = $page;
