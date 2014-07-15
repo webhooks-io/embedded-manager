@@ -14,6 +14,32 @@ angular.module('webhooksio.directives', []).
       		elm.text(title);
     	};
   	}])
+    .directive("markdown", function ($compile, $http) {
+      var converter = new Showdown.converter();
+      return {
+          restrict: 'E',
+          replace: true,
+          link: function (scope, element, attrs) {
+              if ("src" in attrs) {
+                  $http.get(attrs.src).then(function(data) {
+                      element.html(converter.makeHtml(data.data));
+                  });
+              } else {
+                  element.html(converter.makeHtml(element.text()));
+              }
+          }
+      };
+  })
+    .directive('viewIntroduction', function() {
+      return {
+        replace: true,
+        restrict: 'AEC',
+        templateUrl: "partials/introduction.html",
+        link: function(scope, elem, attrs) {
+          scope.resizeFrame();
+        }
+      }
+    })
     .directive('viewDashboard', function() {
       return {
         replace: true,

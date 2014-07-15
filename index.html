@@ -21,6 +21,7 @@
   <div class="container-fluid" ng-controller="WebhookCtrl" ng-cloak>
     <div class="row">
         <ul class="nav nav-tabs">
+          <li ng-if="show_introduction" ng-class="{active:currentview == 'introduction'}"><a ng-click="changePage('introduction')"><i class="fa fa-dashboard"></i> Introduction</a></li>
           <li ng-class="{active:currentview == 'dashboard'}"><a ng-click="changePage('dashboard')"><i class="fa fa-dashboard"></i> Dashboard</a></li>
           <li ng-class="{active:currentview == 'destinations' || currentview == 'adddestination' || currentview == 'editdestination'}"><a ng-click="changePage('destinations')"><i class="fa fa-road"></i> Destinations</a></li>
           <li ng-class="{active:currentview == 'logs'}"><a ng-click="changePage('logs')"><i class="fa fa-book"></i> Logs</a></li>
@@ -31,6 +32,7 @@
 
       
       <div class="col-sm-12 col-md-12" ng-switch="currentview">
+          <span ng-switch-when="introduction"><view-introduction></view-introduction></span>
           <span ng-switch-when="dashboard"><view-dashboard></view-dashboard></span>
           <span ng-switch-when="destinations"><view-destinations></view-destinations></span>
           <span ng-switch-when="adddestination"><add-destination></add-destination></span>
@@ -65,6 +67,8 @@
 
   <!-- Gritter -->
   <script src="js/libs/gritter.js"></script>
+
+  <script src="js/libs/showdown.js"></script>
 
   <!-- App -->
   <script src="js/app.js"></script>

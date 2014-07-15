@@ -22,6 +22,11 @@ angular.module('webhooksio.controllers', [])
     $scope.resizeFrame();
   });
 
+
+  $.listen('parsley:form:validated', function(){
+    $scope.resizeFrame();
+  })
+
   
   $scope.changePage = function($page, $id) {
     $scope.passedid = $id;
@@ -31,10 +36,43 @@ angular.module('webhooksio.controllers', [])
   //Get URL Parameters
   $scope.getURLParams();
 
-  //Default Values
-  $scope.currentview='dashboard';
-  $scope.urlbase = 'http://api.dev.webhooks.io'
-  $scope.apiversion = 'v1';
+//Default Values
+  if(!$scope.params.url_base){
+    $scope.urlbase = 'http://api.dev.webhooks.io';
+  }else{
+    $scope.urlbase = $scope.params.url_base;
+  }
+
+  if(!$scope.params.api_version){
+    $scope.apiversion = 'v1';
+  }else{
+    $scope.apiversion = $scope.params.api_version;
+  }
+
+  if($scope.params.show_introduction == 'no-destinations'){
+    $scope.show_introduction = true;
+  }else if($scope.params.show_introduction){
+    if($scope.params.show_introduction === "true"){
+      $scope.show_introduction = true;
+    }else{
+      $scope.show_introduction = false;
+    }
+  }else if(!$scope.params.show_introduction){
+    $scope.show_introduction = true;
+  }else{
+    $scope.show_introduction = true;
+  }
+
+  if((!$scope.params.default_tab || $scope.params.default_tab == 'introduction') && !$scope.show_introduction){
+    $scope.params.default_tab = 'dashboard';
+  }
+
+  if(!$scope.params.default_tab){
+    $scope.currentview = 'introduction';
+  }else{
+    $scope.currentview = $scope.params.default_tab;
+  }
+
   $scope.account_id = $scope.params.account_id;
   $scope.application_id = $scope.params.application_id;
   $scope.application_version_id = $scope.params.application_version_id;
@@ -184,7 +222,7 @@ angular.module('webhooksio.controllers', [])
     $scope.submit = function() {
 
           $scope.showError = false;
-          
+
           if($('#form').parsley().isValid()) {
 
                $scope.returnproperties = [];
@@ -428,6 +466,7 @@ angular.module('webhooksio.controllers', [])
       $scope.changePage('destinations');
     }
   
+   
 
   
     
