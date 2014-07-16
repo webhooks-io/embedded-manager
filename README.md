@@ -57,3 +57,7 @@ There are several options that you can pass into the embeddable view which will 
 * ```default_tab``` - The tab the interface should load on initial load, valid options include ```introduction```, ```dashboard```, ```destinations```, ```logs```.  Defaults to ```introduction```.
 * ```show_introduction``` - If the introduction tab should show or not. Valid options include ```always```, ```never```, and ```no-destinations```.  Defaults to ```no-destinations``` which will only show the tag when the user has not added any destinations.
 * ```introduction_url``` - If the introduction tab is set to show, this is the URL for the markdown content that will be displayed.
+
+
+# Customization
+You are free to fork this repository and customize as you wish.  If you would like to submit any customizations for inclusion into the code please send a pull request.
