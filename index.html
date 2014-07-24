@@ -14,11 +14,9 @@
   <link rel="stylesheet" href="css/gritter.css"/>
   <link rel="stylesheet" href="css/daterangepicker-bs3.css"/>
   <link rel="stylesheet" href="css/app.css"/>
-
   <base href="/">
 </head>
 <body>
-
   <div class="container-fluid" ng-controller="WebhookCtrl" ng-cloak>
     <div class="row">
         <ul class="nav nav-tabs">
@@ -26,12 +24,10 @@
           <li ng-class="{active:currentview == 'dashboard'}"><a ng-click="changePage('dashboard')"><i class="fa fa-dashboard"></i> Dashboard</a></li>
           <li ng-class="{active:currentview == 'destinations' || currentview == 'adddestination' || currentview == 'editdestination'}"><a ng-click="changePage('destinations')"><i class="fa fa-road"></i> Destinations</a></li>
           <li ng-class="{active:currentview == 'logs' || currentview == 'viewlog'}"><a ng-click="changePage('logs')"><i class="fa fa-book"></i> Logs</a></li>
-          <li ng-class="{active:currentview == 'docs'}"><a ng-click="changePage('docs')"><i class="fa fa-code"></i> Docs</a></li>
+          <!--<li ng-class="{active:currentview == 'docs'}"><a ng-click="changePage('docs')"><i class="fa fa-code"></i> Docs</a></li>-->
         </ul>
       </div>
     <div class="row">
-
-      
       <div class="col-sm-12 col-md-12" ng-switch="currentview">
           <span ng-switch-when="introduction"><view-introduction></view-introduction></span>
           <span ng-switch-when="dashboard"><view-dashboard></view-dashboard></span>
@@ -40,10 +36,8 @@
           <span ng-switch-when="editdestination"><edit-destination></edit-destination></span>
           <span ng-switch-when="logs"><view-logs></view-logs></span>
           <span ng-switch-when="viewlog"><view-log></view-log></span>
-          <span ng-switch-when="docs"><view-docs></view-docs></span>
-          
+          <!--<span ng-switch-when="docs"><view-docs></view-docs></span>-->
       </div>
-      
     </div>
   </div>
   

@@ -20,8 +20,8 @@ angular.module('webhooksio.directives', []).
           restrict: 'E',
           replace: true,
           link: function (scope, element, attrs) {
-              if ("src" in attrs) {
-                  $http.get(attrs.src).then(function(data) {
+              if (scope.introduction_url) {
+                  $http.get(scope.introduction_url).then(function(data) {
                       element.html(converter.makeHtml(data.data));
                   });
               } else {

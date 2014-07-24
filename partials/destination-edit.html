@@ -39,17 +39,12 @@
 
                 <div class="form-group">
                     <label>Verify SSL</label>
-                    <select ng-model="verify_ssl" ng-options="y.option as y.name for y in verify_ssl_options" class="form-control" data-parsley-required="true"><option value=""></option></select>
-                </div>
-
-                <div class="form-group">
-                    <label>Delivery Order</label>
-                    <select ng-model="delivery_order" ng-options="y.option as y.name for y in deliveryoptions" class="form-control" data-parsley-required="true"><option value=""></option></select>
+                    <select ng-model="verify_ssl" ng-options="y.option as y.name for y in verify_ssl_options" class="form-control" data-parsley-required="true"></select>
                 </div>
 
                 <div class="form-group">
                     <label>Retry Policy</label>
-                    <select ng-model="retry_policy_id" ng-options="y.policy_id as y.name for y in policies" class="form-control" data-parsley-required="true"><option value=""></option></select>
+                    <select ng-model="retry_policy_id" ng-options="y.policy_id as y.name for y in policies" class="form-control" data-parsley-required="true"></select>
                 </div>
 
                 <div class="form-group pull-in clearfix" ng-show="show_policy_details">
@@ -65,17 +60,19 @@
 
                 <div class="form-group">
                     <label>Authentication Type</label>
-                    <select ng-model="authentication_type" ng-options="y.type as y.name for y in authoptions" class="form-control" data-parsley-required="true"><option value=""></option></select>
+                    <select ng-model="authentication_type" ng-options="y.type as y.name for y in authoptions" class="form-control" data-parsley-required="true"></select>
                 </div>
 
-                <div class="form-group" ng-repeat="p in properties" ng-switch on="p.selectType">
-                    <label>{{ p.label }}</label>
+                <div class="form-group pull-in clearfix" ng-repeat="p in properties" ng-switch on="p.selectType">
+                    <div class="col-sm-8 ">
+                        <label>{{ p.label }}</label>
 
-                    <input type="text" class="form-control" placeholder="{{ p.label }}" name="{{ p.property }}" id="{{ p.property }}" ng-model="$parent.authproperties[p.property]" data-parsley-required="{{ p.required }}" ng-switch-when="false" />
+                        <input type="text" class="form-control" placeholder="{{ p.label }}" name="{{ p.property }}" id="{{ p.property }}" ng-model="$parent.authproperties[p.property]" data-parsley-required="{{ p.required }}" ng-switch-when="false" />
 
-                    <select ng-model="$parent.authproperties[p.property]" ng-options="z.option_id as z.label for z in p.aOptions" class="form-control" ng-switch-when="true" data-parsley-required="true">
-                        <option value=""></option>
-                    </select>
+                        <select ng-model="$parent.authproperties[p.property]" ng-options="z.option_id as z.label for z in p.aOptions" class="form-control" ng-switch-when="true" data-parsley-required="true">
+                            <option value=""></option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
