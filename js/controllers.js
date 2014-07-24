@@ -3,111 +3,334 @@
 /* Controllers */
 
 angular.module('webhooksio.controllers', [])
+
+
+// ===================================================================
+// Main Controller
+// ===================================================================
   .controller('WebhookCtrl', ['$scope', '$location', '$http', '$templateCache', 'consumerService', function($scope, $location, $http, $templateCache, consumerService) {
 
-  $scope.getURLParams = function() {
+    $scope.getURLParams = function() {
 
-    $scope.params = {};
-    var urlparams = window.location.search.split("?")[1].split("&");
+      $scope.params = {};
+      var urlparams = window.location.search.split("?")[1].split("&");
 
-    for(var i = 0; i < urlparams.length; i++){
-      var parr = urlparams[i].split("=");
-      $scope.params[decodeURIComponent(parr[0])] = decodeURIComponent(parr[1]);
+      for(var i = 0; i < urlparams.length; i++){
+        var parr = urlparams[i].split("=");
+        $scope.params[decodeURIComponent(parr[0])] = decodeURIComponent(parr[1]);
+      }
+
     }
 
-  }
-
-  // handles resizing the window if anything changes...
-  $scope.$watch(function() {
-    $scope.resizeFrame();
-  });
+    // handles resizing the window if anything changes...
+    $scope.$watch(function() {
+      $scope.resizeFrame();
+    });
 
 
-  $.listen('parsley:form:validated', function(){
-    $scope.resizeFrame();
-  })
+    $.listen('parsley:form:validated', function(){
+      $scope.resizeFrame();
+    })
 
-  
-  $scope.changePage = function($page, $id) {
-    $scope.passedid = $id;
-    $scope.currentview = $page;
-  }
+    
+    $scope.changePage = function($page, $id) {
+      $scope.passedid = $id;
+      $scope.currentview = $page;
+    }
 
-  //Get URL Parameters
-  $scope.getURLParams();
+    //Get URL Parameters
+    $scope.getURLParams();
 
-//Default Values
-  if(!$scope.params.url_base){
-    $scope.urlbase = 'http://api.dev.webhooks.io';
-  }else{
-    $scope.urlbase = $scope.params.url_base;
-  }
+  //Default Values
+    if(!$scope.params.url_base){
+      $scope.urlbase = 'http://api.dev.webhooks.io';
+    }else{
+      $scope.urlbase = $scope.params.url_base;
+    }
 
-  if(!$scope.params.api_version){
-    $scope.apiversion = 'v1';
-  }else{
-    $scope.apiversion = $scope.params.api_version;
-  }
+    if(!$scope.params.api_version){
+      $scope.apiversion = 'v1';
+    }else{
+      $scope.apiversion = $scope.params.api_version;
+    }
 
-  if($scope.params.show_introduction == 'no-destinations'){
-    $scope.show_introduction = true;
-  }else if($scope.params.show_introduction){
-    if($scope.params.show_introduction === "true"){
+    if($scope.params.show_introduction == 'no-destinations'){
+      $scope.show_introduction = true;
+    }else if($scope.params.show_introduction){
+      if($scope.params.show_introduction === "true"){
+        $scope.show_introduction = true;
+      }else{
+        $scope.show_introduction = false;
+      }
+    }else if(!$scope.params.show_introduction){
       $scope.show_introduction = true;
     }else{
-      $scope.show_introduction = false;
+      $scope.show_introduction = true;
     }
-  }else if(!$scope.params.show_introduction){
-    $scope.show_introduction = true;
-  }else{
-    $scope.show_introduction = true;
-  }
 
-  if((!$scope.params.default_tab || $scope.params.default_tab == 'introduction') && !$scope.show_introduction){
-    $scope.params.default_tab = 'dashboard';
-  }
+    if((!$scope.params.default_tab || $scope.params.default_tab == 'introduction') && !$scope.show_introduction){
+      $scope.params.default_tab = 'dashboard';
+    }
 
-  if(!$scope.params.default_tab){
-    $scope.currentview = 'introduction';
-  }else{
-    $scope.currentview = $scope.params.default_tab;
-  }
+    if(!$scope.params.default_tab){
+      $scope.currentview = 'logs';
+    }else{
+      $scope.currentview = $scope.params.default_tab;
+    }
 
-  $scope.account_id = $scope.params.account_id;
-  $scope.application_id = $scope.params.application_id;
-  $scope.consumer_id = $scope.params.consumer_id;
-  $scope.api_token = $scope.params.token;
-  $scope.bucket_key = $scope.params.bucket_key;
+    $scope.account_id = $scope.params.account_id;
+    $scope.sub_account_id = $scope.params.sub_account_id;
+    $scope.application_id = $scope.params.application_id;
+    $scope.consumer_id = $scope.params.consumer_id;
+    $scope.api_token = $scope.params.token;
+    $scope.bucket_key = $scope.params.bucket_key;
+    console.log('sub_account_id: ' + $scope.sub_account_id);
+    console.log('account_id: ' + $scope.account_id);
+    console.log('api_token: ' + $scope.api_token);
+    console.log('application_id: ' + $scope.application_id);
+    console.log('bucket_key: ' + $scope.bucket_key);
+    console.log('consumer_id: ' + $scope.consumer_id);
 
 
-  // Default authorization
-  $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
+    // Default authorization
+    $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
 
-  
-  	
+    
+    	
+
+    }])
+    .controller('DestinationCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
+
+    // Default authorization
+    $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
+
+    //Get the list of events:
+    consumerService.getOutputs($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
+      $scope.outputs = data.outputs; 
+    }).error(function(data) {
+          $scope.message = data.message || "Request failed";
+          $scope.messagedetails = data.message_detail;
+          $scope.showError = true;
+    });
 
   }])
-  .controller('DestinationCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
 
-  // Default authorization
-  $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
 
-  //Get the list of events:
-  consumerService.getOutputs($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
-    console.log(data);
-    $scope.outputs = data.outputs; 
-  }).error(function(data) {
-        $scope.message = data.message || "Request failed";
-        $scope.messagedetails = data.message_detail;
-        $scope.showError = true;
-  });
+// ===================================================================
+// Dashboard Controller
+// ===================================================================
+  .controller('DashboardCtrl', ['$scope', '$location', '$http', '$templateCache', 'consumerService', function($scope, $location, $http, $templateCache, consumerService) {
 
-  
 
-  
+     // Default authorization
+    $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
+
+    $scope.getTotalFromArray = function(array) {
+      var total = 0;
+      for(var v=0; v<array.length; v++) {
+        var total =+ array[v];
+      }
+      return total;
+    }
+
+    //Volume chart options
+    $scope.chart_daily_volume_opts = {
+      type:'bar',
+      height:'45px', 
+      barColor:'#31708F', 
+      barSpacing:'1px', 
+      barWidth:'10px'
+    }
+
+    $scope.chart_daily_success_opts = {
+      type:'bar',
+      height:'45px', 
+      barColor:'#3C763D', 
+      barSpacing:'1px', 
+      barWidth:'10px'
+    }
+
+    $scope.chart_daily_failure_opts = {
+      type:'bar',
+      height:'45px', 
+      barColor:'#A94442', 
+      barSpacing:'1px', 
+      barWidth:'10px'
+    }
+
+     $scope.chart_weekly_volume_opts = {
+      type:'bar',
+      height:'45px', 
+      barColor:'#31708F', 
+      barSpacing:'2px', 
+      barWidth:'35px'
+    }
+
+    $scope.chart_weekly_success_opts = {
+      type:'bar',
+      height:'45px', 
+      barColor:'#3C763D', 
+      barSpacing:'2px', 
+      barWidth:'35px'
+    }
+
+    $scope.chart_weekly_failure_opts = {
+      type:'bar',
+      height:'45px', 
+      barColor:'#A94442', 
+      barSpacing:'2px', 
+      barWidth:'35px'
+    }
+
+    //Default values
+    $scope.weekly_volume = [];
+    $scope.weekly_volume_total = 0;
+    $scope.weekly_success = [];
+    $scope.weekly_success_total = 0;
+    $scope.weekly_failure = [];
+    $scope.weekly_failure_total = 0;
+    $scope.daily_volume = [];
+    $scope.daily_volume_total = 0;
+    $scope.daily_success = [];
+    $scope.daily_success_total = 0;
+    $scope.daily_failure = [];
+    $scope.daily_failure_total = 0;
+
+    // Last 7 Day stats
+    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, (moment(moment({hour: 0, minute: 0}).subtract('days',7)).utc()/1000),(moment(moment({hour: 0, minute: 0}).add('days',1)).utc()/1000),'day').success(function(data) {
+      $scope.summary = data.summary;
+      $scope.detail = data.detail;
+
+      $scope.weekly_volume_total = $scope.summary.outgoing_messages;
+      $scope.weekly_success_total = $scope.summary.outgoing_successful;
+      $scope.weekly_failure_total = $scope.getTotalFromArray($scope.summary.outgoing_400, $scope.summary.outgoing_500);
+
+      for(var d=0;d<$scope.detail.length;d++){
+        $scope.weekly_volume.push($scope.detail[0].outgoing_messages);
+        $scope.weekly_success.push($scope.detail[0].outgoing_successful);
+        $scope.weekly_failure.push($scope.detail[0].outgoing_400 + $scope.detail[0].outgoing_500);
+      }
+
+    }).error(function(data) {
+          $scope.message = data.message || "Request failed";
+          $scope.messagedetails = data.message_detail;
+          $scope.showError = true;
+    });
+
+
+    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, (moment(moment({hour: 0, minute: 0}).subtract('hours',24)).utc()/1000),(moment(moment({minute: 0}).utc())/1000), 'hour').success(function(data) {
+      $scope.summary = data.summary;
+      $scope.detail = data.detail;
+
+      $scope.daily_volume_total = $scope.summary.outgoing_messages;
+      $scope.daily_success_total = $scope.summary.outgoing_successful;
+      $scope.daily_failure_total = $scope.getTotalFromArray($scope.summary.outgoing_400, $scope.summary.outgoing_500);
+
+      for(var d=0;d<$scope.detail.length;d++){
+        $scope.daily_volume.push($scope.detail[0].outgoing_messages);
+        $scope.daily_success.push($scope.detail[0].outgoing_successful);
+        $scope.daily_failure.push($scope.detail[0].outgoing_400 + $scope.detail[0].outgoing_500);
+      }
+
+
+    }).error(function(data) {
+          $scope.message = data.message || "Request failed";
+          $scope.messagedetails = data.message_detail;
+          $scope.showError = true;
+    });
+
+
     
 
+    
+
+
+   
+
+    
+      
+
+    }])
+
+
+// ===================================================================
+// Log Controller
+// ===================================================================
+    .controller('LogCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
+
+    // Default authorization
+    $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
+
+
+    $scope.start_date = moment(moment().subtract('hours',24)).utc();
+    $scope.end_date = moment(moment()).utc();
+
+    $scope.date_range_opts = {
+      format: 'YYYY-MM-DD', 
+      startDate:$scope.start_date, 
+      endDate:$scope.end_date,
+      showDropdowns: true,
+      showWeekNumbers: true,
+      timePicker: true,
+      timePickerIncrement: 15,
+      timePicker12Hour: true,
+      ranges: {
+        'Last 10 Minutes': [moment(moment().subtract('minutes',10)).utc(), moment(moment()).utc()],
+        'Last 30 Minutes': [moment(moment().subtract('minutes',30)).utc(), moment(moment()).utc()],
+        'Last Hour': [moment(moment().subtract('hours',1)).utc(), moment(moment()).utc()],
+        'Last 24 Hours': [moment(moment().subtract('hours',24)).utc(), moment(moment()).utc()],
+        'Last 48 Hours': [moment(moment().subtract('hours',48)).utc(), moment(moment()).utc()],
+        'Last 7 Days': [moment(moment({hour: 0, minute: 0}).subtract('days',7)).utc(),moment(moment({hour: 0, minute: 0}).add('days',1)).utc()],
+      },
+      opens: 'left',
+      
+    }
+
+    $scope.$watch('date_range', function(newVal) {
+        if (newVal) {
+              consumerService.getLog($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.bucket_key, moment($scope.start_date).format('X'), moment($scope.end_date).format('X')).success(function(data) { 
+                $scope.requests = data.results.requests;
+              }).error(function(data) {
+                    $scope.message = data.message || "Request failed";
+                    $scope.messagedetails = data.message_detail;
+                    $scope.showError = true;
+              });
+        } 
+   });
+
+    $scope.date_range = moment($scope.start_date).format('MMMM Do YYYY HH:mm UTC') + ' - ' + moment($scope.end_date).format('MMMM Do YYYY HH:mm UTC')
+
+
+
   }])
+
+
+
+
+// ===================================================================
+// Destination Controller
+// ===================================================================
+    .controller('DestinationCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
+
+    // Default authorization
+    $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
+
+    //Get the list of events:
+    consumerService.getOutputs($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
+      $scope.outputs = data.outputs; 
+    }).error(function(data) {
+          $scope.message = data.message || "Request failed";
+          $scope.messagedetails = data.message_detail;
+          $scope.showError = true;
+    });
+
+  }])
+
+
+
+// ===================================================================
+// Destination Add Controller
+// ===================================================================
   .controller('DestinationAddCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
 
   // Default authorization
@@ -291,6 +514,12 @@ angular.module('webhooksio.controllers', [])
     
 
   }])
+
+
+
+// ===================================================================
+// Destination Edit
+// ===================================================================
 .controller('DestinationEditCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
 
   if($scope.passedid === undefined) {

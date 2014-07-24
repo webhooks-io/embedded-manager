@@ -50,6 +50,16 @@ angular.module('webhooksio.services', [])
 
                });
           },
+          getLog:  function($urlbase, $apiversion, $account_id, $bucket_id, $start_date, $end_date) {
+               $http.defaults.useXDomain = true;
+               delete $http.defaults.headers.common['X-Requested-With'];
+               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/log?bucket_id=' + $bucket_id + '&start_date=' + $start_date + '&end_date=' + $end_date ).success(function(result) {
+                    return result.data;
+               }).error(function(result, status) {
+                    return result;
+
+               });
+          },
           updateOutput:  function($urlbase, $apiversion, $account_id, $application_id, $consumer_id, $output_id, $postparams) {
                $http.defaults.useXDomain = true;
                $http.defaults.headers.put["Content-Type"] = "application/x-www-form-urlencoded";
@@ -94,6 +104,17 @@ angular.module('webhooksio.services', [])
                $http.defaults.useXDomain = true;
                delete $http.defaults.headers.common['X-Requested-With'];
                return $http.get($urlbase + '/' + $apiversion + '/retry_policies').success(function(result) {
+                    return result.data;
+               }).error(function(result, status) {
+                    return result;
+
+               });
+          },
+          getStats: function($urlbase, $apiversion, $account_id, $application_id, $bucket_id, $start_date, $end_date, $precision) {
+               $http.defaults.useXDomain = true;
+               delete $http.defaults.headers.common['X-Requested-With'];
+               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/stats/overview?application_id=' + $application_id + '&bucket_id=' + $bucket_id + '&start_date=' + $start_date + '&end_date=' + $end_date + '&precision=' + $precision).success(function(result) {
+                    
                     return result.data;
                }).error(function(result, status) {
                     return result;

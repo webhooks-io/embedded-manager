@@ -12,11 +12,11 @@ var app = angular.module('webhooksio', [
 app.run(function ($rootScope) {
 
 
-  $rootScope.resizeFrame = function() {
+  $rootScope.resizeFrame = function($padding) {
     // If there are any additional elements added, we will need to resize again...
       var container_height = $('.container-fluid').height();
       var footer_height = $('#footer').height();
-      var adjust = 0;
+      var adjust = $padding || 0;
       var height = container_height + footer_height + adjust;
       window.parent.postMessage(height, '*');
   }

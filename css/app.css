@@ -22,3 +22,20 @@ body {
 .nav-tabs a {
   cursor: pointer;
 }
+
+.selectbox {
+  background: #ffffff;
+  color: #333333;
+  padding: 8px;
+  line-height: 18px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-width: 1px 1px 4px 1px;
+}
+.selectbox .caret {
+  position: relative;
+  top: -2px;
+}
+.selectbox span {
+  padding-left: 3px;
+}

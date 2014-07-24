@@ -1,35 +1,70 @@
-<div>
-	<h1>Logs</h1>
-	Here goes a long list of output!
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	<br/>
-	BOTTOM OF LOG ENTRY
-</div>
+<section class="vbox" ng-controller="LogCtrl">
+	<header class="header bg-white b-b">
+		<h2>Event Logs</h2>
+	</header>
+	<div id="daterange" class="selectbox pull-right" date-range-picker ng-model="date_range" opts="{{date_range_opts}}">
+		<i class="fa fa-calendar"></i>
+		<span>{{date_range}}</span> <b class="caret"></b>
+	</div>
+
+	<section class="scrollable wrapper">
+		
+		<div class="row">
+			<div class="table-responsive">
+			  <table class="table">
+			      <thead>
+			        <tr>
+			          <th>Event</th>
+			          <th>Desintation</th>
+			          <th>Status | Attempts</th>
+			          <th>Response Code</th>
+			          <th>&nbsp;</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			        <tr class="success" ng-repeat="request in requests">
+			          <td>{{request.event_type}}</td>
+			          <td>{{output_name}}<br /><!--<small>https://webhooks.io/clientcreated</small>--></td>
+			          <td><span class="badge alert-info"><span ng-class="{text-success:request.status == 'sent', text-danger:request.status == 'failed', text-danger:request.status == 'queued'}">{{request.status}}  | {{request.attempts}}</span></span></td>
+			          <td>{{request.http_response_code}}</td>
+			          <td class="text-center"><button type="button" class="btn btn-xs btn-info" ng-click="changePage('viewlog',request.output_id)">View Details</button></td>
+			        </tr>
+			        <tr ng-if="!requests.length">
+			        	<td colspan="5">
+			        		<div class="alert alert-warning" role="alert">
+      							<strong>Warning!</strong> No delivery attempts for the selected date range.  Try adjusting your selection.
+    						</div>
+    					</td>
+			        </tr>
+			        <!--
+			        <tr class="success">
+			          <td>client.create</td>
+			          <td>Client Created to IO<br /><small>https://webhooks.io/clientcreated</small></td>
+			          <td><span class="badge alert-info"><span class="text-success">sent  / 1</span></span></td>
+			          <td>200</td>
+			          <td class="text-center"><button type="button" class="btn btn-xs btn-info" ng-click="changePage('viewlog',1)">View Details</button></td>
+			        </tr>
+			        <tr class="danger">
+			          <td>client.create</td>
+			          <td>Client Created to IO<br /><small>https://webhooks.io/clientcreated</small></td>
+			          <td><span class="badge  alert-info"><span class="text-danger">failure  | 10</span></span></td>
+			          <td>503</td>
+			          <td class="text-center"><button type="button" class="btn btn-xs btn-info" ng-click="changePage('viewlog',1)">View Details</button></td>
+			        </tr>
+			        
+			       	<tr class="warning">
+			          <td>client.create</td>
+			          <td>Client Created to IO<br /><small>https://webhooks.io/clientcreated</small></td>
+			          <td><span class="badge alert-info"><span class="text-warning">queued  / 3</span></span></td>
+			          <td>404</td>
+			          <td class="text-center"><button type="button" class="btn btn-xs btn-info" ng-click="changePage('viewlog',1)">View Details</button></td>
+			        </tr>
+			        -->
+			      </tbody>
+			    </table>
+			</div>
+	       
+	    </div>
+	</section>
+</section>
+
