@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <title>Event Notification</title>
-    <base href="https://sendgrid.com/">
+    <base href="http://sendgrid.com/">
     <meta content='' name='description'>
     <meta content='' name='author'>
     <meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
@@ -216,9 +216,12 @@ Jason Fill
                     <div id="webhookcontent"></div>
                     <script type="text/javascript" src="http://embedded.dev.webhooks.io/js/embedded.js"></script>
                     <script>
+                        /*
                         var opts = {"account_id":"ACd0d0fa49f52e4e188c219722af133368",
                                     "sub_account_id":"AC947b2c078ea84bdf8c315121ffac30da",
                                     "application_id":"AP53a066edba3e4e46bcee515549e27ecd",
+                                    "input_id": "",
+                                    "bucket_id": "",
                                     "element_id":"webhookcontent",
                                     "bucket_key":"default",
                                     "paths":"*",
@@ -227,6 +230,23 @@ Jason Fill
                                     "introduction_url": "https://dl.dropboxusercontent.com/u/9942033/Webhooks_Embed_Intro.md"
                                 }; 
                         wh.display("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGlfdG9rZW4iOiJUTzMyNWM0NmU0ZjY1MjRiNzM4YjM1NGY3ZWI3ZTJhZWM2IiwiY29uc3VtZXJfaWQiOiIxMDAxIiwiYnVja2V0X2tleSI6ImRlZmF1bHQiLCJwYXRocyI6IioiLCJkYXRlX2NyZWF0ZWQiOjE0MDUzNTk0Mjk4OTV9.eE5LtIcwTAM34jJItHT1UOjw87u5UO9iB9F8XqIhkhQ", opts);
+                        */
+
+                        var opts = {"account_id":"AC9e0d25944d5a4d2f8b0f0aef58a2d8bc",
+                                    "sub_account_id":"AC35f6f52cf3c446729682b54aa4be4701",
+                                    "application_id":"AP4306b25d87e541bb93909f0f556bce89",
+                                    "input_id": "INcc111b0be1fb42aeabb787c1a29a0b6b",
+                                    "bucket_id": "BU6063741948d74f29ba2117e9a3e2fb35",
+                                    "element_id":"webhookcontent",
+                                    "bucket_key":"default",
+                                    "paths":"*",
+                                    "consumer_id":1001,
+                                    "show_introduction": true,
+                                    "introduction_url": "https://dl.dropboxusercontent.com/u/9942033/Webhooks_Embed_Intro.md",
+                                    "url_base": "http://api.dev-webhooks.io:8000"
+                                }; 
+                        wh.display("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGlfdG9rZW4iOiJUT2E3N2U0ZjlkZmFhZDQyMmRiMTA3ZTJiNmRmZDdjNjAwIiwiYWNjb3VudF9pZCI6IkFDMzVmNmY1MmNmM2M0NDY3Mjk2ODJiNTRhYTRiZTQ3MDEiLCJhcHBsaWNhdGlvbl9pZCI6IkFQNDMwNmIyNWQ4N2U1NDFiYjkzOTA5ZjBmNTU2YmNlODkiLCJidWNrZXRfaWQiOiJCVTYwNjM3NDE5NDhkNzRmMjliYTIxMTdlOWEzZTJmYjM1IiwiaW5wdXRfaWQiOiJJTmNjMTExYjBiZTFmYjQyYWVhYmI3ODdjMWEyOWEwYjZiIiwiYnVja2V0X2tleSI6ImRldmVsb3BtZW50IiwicGF0aHMiOiIvdGVzdGluZyIsImRhdGVfY3JlYXRlZCI6MTQwNjI4MDMyODAwN30.mZI-0R_OqyFJv4a3KTjAZ1m4vaNH3XeoESt_Z5qtDQg", opts);
+
                     </script>
                     <!--// END: Webhooks Embedded -->
 

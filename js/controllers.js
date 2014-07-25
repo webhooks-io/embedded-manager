@@ -32,7 +32,6 @@ angular.module('webhooksio.controllers', [])
       $scope.resizeFrame();
     })
 
-    
     $scope.changePage = function($page, $id) {
       $scope.passedid = $id;
       $scope.currentview = $page;
@@ -73,7 +72,7 @@ angular.module('webhooksio.controllers', [])
     }
 
     if(!$scope.params.default_tab){
-      $scope.currentview = 'logs';
+      $scope.currentview = 'dashboard';
     }else{
       $scope.currentview = $scope.params.default_tab;
     }
@@ -81,9 +80,13 @@ angular.module('webhooksio.controllers', [])
     $scope.account_id = $scope.params.account_id;
     $scope.sub_account_id = $scope.params.sub_account_id;
     $scope.application_id = $scope.params.application_id;
+    $scope.bucket_id = $scope.params.bucket_id;
+    $scope.input_id = $scope.params.input_id;
     $scope.consumer_id = $scope.params.consumer_id;
     $scope.api_token = $scope.params.token;
     $scope.bucket_key = $scope.params.bucket_key;
+
+    console.log($scope.params)
 
 
     // Default authorization
@@ -99,7 +102,7 @@ angular.module('webhooksio.controllers', [])
     $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
 
     //Get the list of events:
-    consumerService.getDestinations($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
+    consumerService.getDestinations($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.input_id).success(function(data) {
       $scope.destinations = data.destinations; 
     }).error(function(data) {
           $scope.message = data.message || "Request failed";
@@ -310,7 +313,7 @@ angular.module('webhooksio.controllers', [])
     $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
 
     //Get the list of events:
-    consumerService.getDestinations($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
+    consumerService.getDestinations($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.input_id).success(function(data) {
       $scope.destinations = data.destinations; 
     }).error(function(data) {
           $scope.message = data.message || "Request failed";
@@ -353,8 +356,9 @@ angular.module('webhooksio.controllers', [])
   });
 
   //Get Auth Options Events
-  consumerService.getAuthOptions($scope.urlbase, $scope.apiversion).success(function(data) {
+  consumerService.getAuthOptions($scope.urlbase, $scope.apiversion, 'destination').success(function(data) {
       $scope.authoptionList = data;
+      console.log(data)
       $scope.authoptions = [];
       for (var key in data) {
            data[key].type = key;
@@ -486,7 +490,7 @@ angular.module('webhooksio.controllers', [])
                     alert_on_failure : $scope.email_address
                });
                
-               consumerService.createDestination($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, postdata).success(function(data) {
+               consumerService.createDestination($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.input_id, postdata).success(function(data) {
                     $scope.showMessage({title:'Success', text: 'The destination has been created!'});
                     $scope.changePage('destinations');
                }).error(function(data) {
@@ -543,7 +547,7 @@ angular.module('webhooksio.controllers', [])
 
 
     //Get Auth Options Events
-    consumerService.getAuthOptions($scope.urlbase, $scope.apiversion).success(function(data) {
+    consumerService.getAuthOptions($scope.urlbase, $scope.apiversion, 'destination').success(function(data) {
         $scope.authoptionList = data;
         $scope.authoptions = [];
         for (var key in data) {
@@ -558,7 +562,7 @@ angular.module('webhooksio.controllers', [])
 
 
               //Get Output
-              consumerService.getDestination($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key, $scope.destination_id).success(function(data) {
+              consumerService.getDestination($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.destination_id).success(function(data) {
                     $scope.name = data.name;
                     $scope.version_id = data.application_version_id;
                     if(data.event_filters.length) {
@@ -573,7 +577,11 @@ angular.module('webhooksio.controllers', [])
                     $scope.retry_interval = data.retry_interval;
                     
                     if(data.verify_ssl){
-                         $scope.verify_ssl = data.verify_ssl;
+                        if(data.verify_ssl == true){
+                          $scope.verify_ssl = "true";
+                        }else{
+                          $scope.verify_ssl = "false";
+                        }
                     }else{
                          $scope.verify_ssl = "true";
                     }
@@ -723,7 +731,7 @@ angular.module('webhooksio.controllers', [])
                     alert_on_failure : $scope.email_address
                });
                
-               consumerService.updateDestination($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.destination_id, postdata).success(function(data) {
+               consumerService.updateDestination($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.destination_id, postdata).success(function(data) {
                     $scope.showMessage({title:'Success', text: 'The destination has been updated successfully!'});
                     $scope.changePage('destinations');
                }).error(function(data) {
@@ -742,7 +750,7 @@ angular.module('webhooksio.controllers', [])
 
 
     $scope.delete = function($destination_id) {
-       consumerService.deleteDestination($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $destination_id).success(function(data) {
+       consumerService.deleteDestination($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.destination_id).success(function(data) {
             $scope.showMessage({title:'Success', text: 'The destination has been deleted!'});
             $scope.changePage('destinations');
        }).error(function(data) {
