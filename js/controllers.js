@@ -73,7 +73,7 @@ angular.module('webhooksio.controllers', [])
     }
 
     if(!$scope.params.default_tab){
-      $scope.currentview = 'logs';
+      $scope.currentview = 'dashboard';
     }else{
       $scope.currentview = $scope.params.default_tab;
     }
