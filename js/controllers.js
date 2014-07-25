@@ -84,12 +84,6 @@ angular.module('webhooksio.controllers', [])
     $scope.consumer_id = $scope.params.consumer_id;
     $scope.api_token = $scope.params.token;
     $scope.bucket_key = $scope.params.bucket_key;
-    console.log('sub_account_id: ' + $scope.sub_account_id);
-    console.log('account_id: ' + $scope.account_id);
-    console.log('api_token: ' + $scope.api_token);
-    console.log('application_id: ' + $scope.application_id);
-    console.log('bucket_key: ' + $scope.bucket_key);
-    console.log('consumer_id: ' + $scope.consumer_id);
 
 
     // Default authorization
@@ -105,8 +99,8 @@ angular.module('webhooksio.controllers', [])
     $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
 
     //Get the list of events:
-    consumerService.getOutputs($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
-      $scope.outputs = data.outputs; 
+    consumerService.getDestinations($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
+      $scope.destinations = data.destinations; 
     }).error(function(data) {
           $scope.message = data.message || "Request failed";
           $scope.messagedetails = data.message_detail;
@@ -316,8 +310,8 @@ angular.module('webhooksio.controllers', [])
     $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
 
     //Get the list of events:
-    consumerService.getOutputs($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
-      $scope.outputs = data.outputs; 
+    consumerService.getDestinations($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key).success(function(data) {
+      $scope.destinations = data.destinations; 
     }).error(function(data) {
           $scope.message = data.message || "Request failed";
           $scope.messagedetails = data.message_detail;
@@ -492,8 +486,8 @@ angular.module('webhooksio.controllers', [])
                     alert_on_failure : $scope.email_address
                });
                
-               consumerService.createOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, postdata).success(function(data) {
-                    $scope.showMessage({title:'Success', text: 'The output has been created!'});
+               consumerService.createDestination($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, postdata).success(function(data) {
+                    $scope.showMessage({title:'Success', text: 'The destination has been created!'});
                     $scope.changePage('destinations');
                }).error(function(data) {
                     $scope.message = data.message || "Request failed";
@@ -525,7 +519,7 @@ angular.module('webhooksio.controllers', [])
   if($scope.passedid === undefined) {
     $scope.changePage('destinations');
   } else {
-    $scope.output_id = $scope.passedid;
+    $scope.destination_id = $scope.passedid;
   }
 
   // Default authorization
@@ -564,7 +558,7 @@ angular.module('webhooksio.controllers', [])
 
 
               //Get Output
-              consumerService.getOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key, $scope.output_id).success(function(data) {
+              consumerService.getDestination($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.bucket_key, $scope.destination_id).success(function(data) {
                     $scope.name = data.name;
                     $scope.version_id = data.application_version_id;
                     if(data.event_filters.length) {
@@ -729,8 +723,8 @@ angular.module('webhooksio.controllers', [])
                     alert_on_failure : $scope.email_address
                });
                
-               consumerService.updateOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.output_id, postdata).success(function(data) {
-                    $scope.showMessage({title:'Success', text: 'The output has been updated successfully!'});
+               consumerService.updateDestination($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $scope.destination_id, postdata).success(function(data) {
+                    $scope.showMessage({title:'Success', text: 'The destination has been updated successfully!'});
                     $scope.changePage('destinations');
                }).error(function(data) {
                     $scope.message = data.message || "Request failed";
@@ -747,8 +741,8 @@ angular.module('webhooksio.controllers', [])
     }
 
 
-    $scope.delete = function($output_id) {
-       consumerService.deleteOutput($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $output_id).success(function(data) {
+    $scope.delete = function($destination_id) {
+       consumerService.deleteDestination($scope.urlbase, $scope.apiversion, $scope.account_id, $scope.application_id, $scope.consumer_id, $destination_id).success(function(data) {
             $scope.showMessage({title:'Success', text: 'The destination has been deleted!'});
             $scope.changePage('destinations');
        }).error(function(data) {
