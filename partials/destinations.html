@@ -11,11 +11,11 @@
 		</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="output in outputs">
-				<td><strong><a href="javascript:void(0);" ng-click="changePage('editdestination',output.output_id)">{{output.name}}</a></strong></td>
-				<td><strong>{{output.event_filters}}</strong></td>
-				<td>{{output.endpoint_url}}</td>
-				<td class="success text-center">{{output.status}}</td>
+			<tr ng-repeat="destination in destinations">
+				<td><strong><a href="javascript:void(0);" ng-click="changePage('editdestination',destination.destination_id)">{{destination.name}}</a></strong></td>
+				<td><strong>{{destination.event_filters}}</strong></td>
+				<td>{{destination.endpoint_url}}</td>
+				<td class="success text-center">{{destination.status}}</td>
 			</tr>
 		</tbody>
 	</table>
