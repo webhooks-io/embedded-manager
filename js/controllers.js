@@ -198,6 +198,8 @@ angular.module('webhooksio.controllers', [])
       $scope.summary = data.summary;
       $scope.detail = data.detail;
 
+      console.log(data);
+
       $scope.weekly_volume_total = $scope.summary.outgoing_messages;
       $scope.weekly_success_total = $scope.summary.outgoing_successful;
       $scope.weekly_failure_total = $scope.getTotalFromArray($scope.summary.outgoing_400, $scope.summary.outgoing_500);
@@ -219,6 +221,8 @@ angular.module('webhooksio.controllers', [])
       $scope.summary = data.summary;
       $scope.detail = data.detail;
 
+      console.log(data);
+
       $scope.daily_volume_total = $scope.summary.outgoing_messages;
       $scope.daily_success_total = $scope.summary.outgoing_successful;
       $scope.daily_failure_total = $scope.getTotalFromArray($scope.summary.outgoing_400, $scope.summary.outgoing_500);
@@ -235,6 +239,7 @@ angular.module('webhooksio.controllers', [])
           $scope.messagedetails = data.message_detail;
           $scope.showError = true;
     });
+
 
 
     
