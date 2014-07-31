@@ -1,4 +1,4 @@
-<section class="vbox" ng-controller="LogCtrl">
+<section class="vbox" ng-controller="MessageCtrl">
 	<header class="header bg-white b-b">
 		<h2>Event Delivery Details</h2>
 		<button type="button" ng-click="changePage('logs');" class="btn btn-default btn-xs"><i class="fa fa-chevron-left"></i> Back to Logs</button>
@@ -8,24 +8,180 @@
 			<section class="scrollable wrapper">
 				<br />
 				<ul class="nav nav-pills nav-stacked">
-			      <li class="active"><a href="#summary" data-toggle="tab">Summary</a></li>
-			      <li><a href="#details" data-toggle="tab">Details</a></li>
-			      <li><a href="#attempts" data-toggle="tab">Messages</a></li>
+			      <li class="active"><a href="#summary" data-toggle="tab" resize-tab>Summary</a></li>
+			      <li><a href="#details" data-toggle="tab" resize-tab>Details</a></li>
+			      <li><a href="#attempts" data-toggle="tab" resize-tab>Messages</a></li>
 			    </ul>
 			</section>
 		</div>
 		<div class="col-sm-10">
 			<section class="scrollable wrapper">
 				<div class="tab-content">
+
+
+
 					<div class="tab-pane active text-style" id="summary">
-						<h3>Event Summary</h3>
+						<h3>Delivery Summary</h3>
+
+						<div class="list-group bg-white">
+                  			<a class="list-group-item">
+			                  <span class="badge alert-success" ng-if="message_details.status == 'sent'">{{message_details.status}}</span>
+			                  <span class="badge alert-warning" ng-if="message_details.status == 'queued'">{{message_details.status}}</span>
+			                  <span class="badge alert-warning" ng-if="message_details.status == 're-queued'">{{message_details.status}}</span>
+			                  <span class="badge alert-danger" ng-if="message_details.status == 'failed'">{{message_details.status}}</span>
+			                  <span class="badge alert-info" ng-if="message_details.status == 'partial'">{{message_details.status}}</span>
+			                  Delivery Status:<span ng-if="message_details.status.length > 0"> <i>{{message_details.status_message}} </i></span>
+			                </a>
+			                <a class="list-group-item" ng-if="message_details.status_message.length > 0">
+			                  Delivery Status Message:   <span class="pull-right"><i>{{message_details.status_message}}</i></span>
+			                </a>
+			                <a class="list-group-item">
+			                  <span class="badge bg-info">{{message_details.outgoing_message.attempt_count}}</span>
+			                  Delivery Attempts:
+			                </a>
+			                <a class="list-group-item">
+			                  <span class="pull-right">{{message_details.outgoing_message.date_last_attempted}}</span>
+			                  Last Send Attempt:
+			                </a>
+		             	</div>
+
 						
 					</div>
+
+
+
 					<div class="tab-pane text-style" id="details">
-						<h3>Destination Details</h3>
-					</div><div class="tab-pane text-style" id="attempts">
-						<h3>Attempts</h3>
+
+						<h3>Delivery Details</h3>
+
+		                <div class="text-center">
+		                	<br />
+		                	<button type="button" class="btn btn-primary" ng-click="resend()"><i class="fa fa-retweet"></i> Send Webhook Again</button>
+		                	<br /><br />
+		                </div>
+
+
+                		
+          				<form class="form-horizontal">
+		                    <div class="form-group">
+		                      <label class="col-sm-2 control-label">Endpoint URL</label>
+		                      <div class="col-sm-10">
+		                        <input class="form-control" type="text" readonly value="{{message_details.outgoing_message.message_url}}">
+		                        <span class="help-block m-b-none">The URL where delivery is attempted.</span>
+		                      </div>
+		                    </div>
+
+
+		                     <div class="form-group">
+		                      <label class="col-sm-2 control-label">Content Type</label>
+		                      <div class="col-sm-10">
+		                        <input class="form-control" type="text" readonly value="{{message_details.outgoing_message.message_content_type}}">
+		                      </div>
+		                    </div>
+
+		                     <div class="form-group">
+		                      <label class="col-sm-2 control-label">Method</label>
+		                      <div class="col-sm-10">
+		                        <input class="form-control" type="text" readonly value="{{message_details.outgoing_message.message_method}}">
+		                      </div>
+		                    </div>
+
+		                    
+		                   <div class="form-group">
+		                      <label class="col-sm-2 control-label">Headers</label>
+		                      <div class="col-sm-10">
+		                        <div class="list-group bg-white">
+					                <a class="list-group-item" ng-repeat="(key, value) in message_details.outgoing_message.message_headers">
+					                  <strong>{{key}}:</strong> &nbsp; &nbsp; {{value}}
+					                </a>
+					               
+				             	</div>
+
+		                      </div>
+		                    </div>
+
+
+		                    <div class="form-group">
+		                      <label class="col-sm-2 control-label">Query Params</label>
+		                      <div class="col-sm-10">
+		                        <div class="list-group bg-white">
+					                <a class="list-group-item" ng-repeat="(key, value) in message_details.outgoing_message.message_query_string">
+					                  <strong>{{key}}:</strong> &nbsp; &nbsp; {{value}}
+					                </a>
+					               
+				             	</div>
+
+		                      </div>
+		                    </div>
+
+		                    <div class="form-group">
+		                      <label class="col-sm-2 control-label">Body</label>
+		                      <div class="col-sm-10">
+		                      	<textarea readonly="true" style="width:100%; height:200px;">{{message_details.outgoing_message.message_body}}</textarea>
+		                      </div>
+		                    </div>
+
+
+		        		</form>
+
+			                 
+
+
 					</div>
+
+
+
+					<div class="tab-pane text-style" id="attempts">
+						<h3>Delivery Attempts</h3>
+
+						<section class="panel clearfix"> 
+			                <div id="wizard-2" class="wizard wizard-vertical clearfix">
+			                  <ul class="steps">
+			                  	<li data-target="#step{{$index}}" ng-class="{'active': $first}" ng-repeat="attempt in message_details.outgoing_message.attempts | orderBy:'date_attempted'"><a data-toggle="tab" data-target="#step{{$index}}"><span class="badge" ng-class="{'bg-success': attempt.status === 'successful','bg-danger': attempt.status === 'failure'}">{{$index+1}}</span>{{formatDate(attempt.date_attempted, 'seconds')}}</a></li>
+			                  </ul>
+			                </div>
+			                <div class="step-content">
+			                  <div id="step{{$index}}" class="step-pane" ng-class="{'active': $first}" ng-repeat="attempt in message_details.outgoing_message.attempts | orderBy:'date_attempted'">
+
+			                  	<a class="clear">
+		                            <small class="pull-right"><i>{{attempt.status.toUpperCase()}} : {{attempt.response_status}}</i></small>
+		                            <strong class="block">
+		                            	<span class="badge" ng-class="{'bg-success': attempt.status === 'successful','bg-danger': attempt.status === 'failure'}">Attempt # {{$index+1}}</span>
+	                          			{{formatDate(attempt.date_attempted)}}
+	                          		</strong>
+		                            
+		                          </a>
+		                          <br /><br />
+
+			                     <div class="form-group">
+			                      <label class="col-sm-2 control-label">Response Headers</label>
+			                      <div class="col-sm-10">
+			                        <div class="list-group bg-white">
+						                <a class="list-group-item" ng-repeat="(key, value) in attempt.reponse_headers">
+						                  <strong>{{key}}:</strong> &nbsp; &nbsp; {{value}}
+						                </a>
+						               
+					             	</div>
+
+			                      </div>
+			                    </div>
+
+			                    <div class="line line-dashed line-lg pull-in"></div>
+
+			                    <div class="form-group">
+			                      <label class="col-sm-2 control-label">Response Body</label>
+			                      <div class="col-sm-10">
+			                      	<textarea class="form-control" rows="20" readonly>{{attempt.response_body}}</textarea>
+			                      </div>
+			                    </div>
+			                  </div>
+			                </div>
+			              </section>
+
+
+					</div>
+
+					
 				</div>
 			</section>
 		</div>

@@ -78,6 +78,19 @@ angular.module('webhooksio.directives', []).
           }
       }
     }])
+    .directive('resizeTab', [function () {
+      'use strict';
+      return {
+          restrict: 'ACE',
+          link: function (scope, elem) {
+             elem.click(function(e) {
+                    e.preventDefault();
+                    $(elem).tab('show');
+                    scope.resizeFrame();
+                });
+          }
+      }
+    }])
     .directive('jqSparkline', [function () {
       'use strict';
       return {

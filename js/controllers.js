@@ -308,6 +308,33 @@ angular.module('webhooksio.controllers', [])
 
 
 
+// ===================================================================
+// Message Controller
+// ===================================================================
+    .controller('MessageCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
+
+    // Default authorization
+    $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
+
+    if($scope.passedid === undefined) {
+      $scope.changePage('logs');
+    } else {
+      $scope.outgoing_message_id = $scope.passedid;
+    }
+
+    //Get the list of events:
+    consumerService.getOutgoingMessage($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.outgoing_message_id).success(function(data) {
+      $scope.message_details = data;
+    }).error(function(data) {
+          $scope.message = data.message || "Request failed";
+          $scope.messagedetails = data.message_detail;
+          $scope.showError = true;
+    });
+   
+
+  }])
+
+
 
 // ===================================================================
 // Destination Controller
