@@ -54,7 +54,7 @@ angular.module('webhooksio.services', [])
           getLog:  function($urlbase, $apiversion, $sub_account_id, $bucket_id, $start_date, $end_date) {
                $http.defaults.useXDomain = true;
                delete $http.defaults.headers.common['X-Requested-With'];
-               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/log?bucket_id=' + $bucket_id + '&start_date=' + $start_date + '&end_date=' + $end_date ).success(function(result) {
+               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/log?start_date=' + $start_date + '&end_date=' + $end_date ).success(function(result) {
                     return result.data;
                }).error(function(result, status) {
                     return result;
@@ -114,7 +114,7 @@ angular.module('webhooksio.services', [])
           getStats: function($urlbase, $apiversion, $sub_account_id, $application_id, $bucket_id, $start_date, $end_date, $precision) {
                $http.defaults.useXDomain = true;
                delete $http.defaults.headers.common['X-Requested-With'];
-               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/stats/overview?application_id=' + $application_id + '&bucket_id=' + $bucket_id + '&start_date=' + $start_date + '&end_date=' + $end_date + '&precision=' + $precision).success(function(result) {
+               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/stats/overview?application_id=' + $application_id + '&start_date=' + $start_date + '&end_date=' + $end_date + '&precision=' + $precision).success(function(result) {
                     return result.data;
                }).error(function(result, status) {
                     return result;
@@ -123,13 +123,13 @@ angular.module('webhooksio.services', [])
           getOutgoingMessage: function($urlbase, $apiversion, $sub_account_id, $outgoing_message_id) {
                $http.defaults.useXDomain = true;
                delete $http.defaults.headers.common['X-Requested-With'];
-               return $http.get('http://embedded.dev.webhooks.io/samples/outgoingmessage_response.json').success(function(result) {
-               //return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $account_id + '/outgoing/' + $outgoing_message_id).success(function(result) {
+               //return $http.get('http://embedded.dev.webhooks.io/samples/outgoingmessage_response.json').success(function(result) {
+               return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/outgoing/' + $outgoing_message_id).success(function(result) {
                     return result.data;
                }).error(function(result, status) {
                     return result;
 
                });
           },
-     }
-})
+     };
+});

@@ -3,10 +3,10 @@
 
 // Declare app level module which depends on filters, and services
 var app = angular.module('webhooksio', [
-  	'webhooksio.filters',
-  	'webhooksio.services',
-  	'webhooksio.directives',
-  	'webhooksio.controllers'
+    'webhooksio.filters',
+    'webhooksio.services',
+    'webhooksio.directives',
+    'webhooksio.controllers'
 ]);
 
 app.run(function ($rootScope) {
@@ -19,20 +19,39 @@ app.run(function ($rootScope) {
       var adjust = $padding || 0;
       var height = container_height + footer_height + adjust;
       window.parent.postMessage(height, '*');
-  }
+  };
 
 	
 
   $rootScope.showMessage = function($opts) {
     $.gritter.add($opts);
-  }
+  };
+
+  $rootScope.relativeDateFormat = function($date, $format) {
+    var $rtnDate = moment();
+    var $currentDate = moment();
+    if($format.length) {
+        $rtnDate = moment($date, $format);
+    } else {
+        $rtnDate = moment($date);
+    }
+
+    // Only use relative dates if less than 45 minutes ago.
+    if($currentDate.format('X') > $rtnDate.format('X') && ($currentDate.format('X') - $rtnDate.format('X')) < 2700) {
+        return $rtnDate.fromNow();
+    } else {
+        return $rtnDate.utc().format('MMM Do YYYY HH:mm:ss UTC');
+    }
+
+    
+  };
 
 
   $rootScope.parseMarkdown = function (s) {
     var r = s, ii, pre1 = [], pre2 = [];
 
     // detect newline format
-    var newline = r.indexOf('\r\n') != -1 ? '\r\n' : r.indexOf('\n') != -1 ? '\n' : ''
+    var newline = r.indexOf('\r\n') != -1 ? '\r\n' : r.indexOf('\n') != -1 ? '\n' : '';
     
     // store {{{ unformatted blocks }}} and &lt;pre> pre-formatted blocks &lt;/pre>
     r = r.replace(/{{{([\s\S]*?)}}}/g, function (x) { pre1.push(x.substring(3, x.length - 3)); return '{{{}}}'; });
@@ -81,7 +100,7 @@ app.run(function ($rootScope) {
     r = r.replace(new RegExp(' + ' + newline, 'g'), '&lt;br>' + newline);
     
     // split on double-newlines, then add paragraph tags when the first tag isn't a block level element
-    if (newline != '') for (var p = r.split(newline + newline), i = 0; i < p.length; i++) {
+    if (newline !== '') for (var p = r.split(newline + newline), i = 0; i < p.length; i++) {
         var blockLevel = false;
         if (p[i].length >= 1 && p[i].charAt(0) == '&lt;') {
             // check if the first tag is a block-level element
@@ -104,13 +123,13 @@ app.run(function ($rootScope) {
     }
     
     // reassemble the paragraphs
-    if (newline != '') r = p.join(newline + newline);
+    if (newline !== '') r = p.join(newline + newline);
     
     // restore the preformatted and unformatted blocks
     r = r.replace(new RegExp('&lt;pre>&lt;/pre>', 'g'), function (match) { return '&lt;pre>' + pre2.shift() + '&lt;/pre>'; });
     r = r.replace(/{{{}}}/g, function (match) { return pre1.shift(); });
     return r;
-}
+};
 
 
 

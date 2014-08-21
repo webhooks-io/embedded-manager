@@ -1,4 +1,4 @@
-'use strict';
+
 
 /* Controllers */
 
@@ -20,7 +20,7 @@ angular.module('webhooksio.controllers', [])
         $scope.params[decodeURIComponent(parr[0])] = decodeURIComponent(parr[1]);
       }
 
-    }
+    };
 
     // handles resizing the window if anything changes...
     $scope.$watch(function() {
@@ -30,19 +30,19 @@ angular.module('webhooksio.controllers', [])
 
     $.listen('parsley:form:validated', function(){
       $scope.resizeFrame();
-    })
+    });
 
     $scope.changePage = function($page, $id) {
       $scope.passedid = $id;
       $scope.currentview = $page;
-    }
+    };
 
     //Get URL Parameters
     $scope.getURLParams();
 
   //Default Values
     if(!$scope.params.url_base){
-      $scope.urlbase = 'http://api.dev.webhooks.io';
+      $scope.urlbase = 'https://api.webhooks.io';
     }else{
       $scope.urlbase = $scope.params.url_base;
     }
@@ -86,14 +86,9 @@ angular.module('webhooksio.controllers', [])
     $scope.api_token = $scope.params.token;
     $scope.bucket_key = $scope.params.bucket_key;
 
-    console.log($scope.params)
-
 
     // Default authorization
     $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
-
-    
-    	
 
     }])
     .controller('DestinationCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
@@ -103,7 +98,7 @@ angular.module('webhooksio.controllers', [])
 
     //Get the list of events:
     consumerService.getDestinations($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.input_id).success(function(data) {
-      $scope.destinations = data.destinations; 
+      $scope.destinations = data.destinations;
     }).error(function(data) {
           $scope.message = data.message || "Request failed";
           $scope.messagedetails = data.message_detail;
@@ -125,59 +120,59 @@ angular.module('webhooksio.controllers', [])
     $scope.getTotalFromArray = function(array) {
       var total = 0;
       for(var v=0; v<array.length; v++) {
-        var total =+ array[v];
+        total =+ array[v];
       }
       return total;
-    }
+    };
 
     //Volume chart options
     $scope.chart_daily_volume_opts = {
       type:'bar',
-      height:'45px', 
-      barColor:'#31708F', 
-      barSpacing:'1px', 
+      height:'45px',
+      barColor:'#31708F',
+      barSpacing:'1px',
       barWidth:'10px'
-    }
+    };
 
     $scope.chart_daily_success_opts = {
       type:'bar',
-      height:'45px', 
-      barColor:'#3C763D', 
-      barSpacing:'1px', 
+      height:'45px',
+      barColor:'#3C763D',
+      barSpacing:'1px',
       barWidth:'10px'
-    }
+    };
 
     $scope.chart_daily_failure_opts = {
       type:'bar',
-      height:'45px', 
-      barColor:'#A94442', 
-      barSpacing:'1px', 
+      height:'45px',
+      barColor:'#A94442',
+      barSpacing:'1px',
       barWidth:'10px'
-    }
+    };
 
      $scope.chart_weekly_volume_opts = {
       type:'bar',
-      height:'45px', 
-      barColor:'#31708F', 
-      barSpacing:'2px', 
+      height:'45px',
+      barColor:'#31708F',
+      barSpacing:'2px',
       barWidth:'35px'
-    }
+    };
 
     $scope.chart_weekly_success_opts = {
       type:'bar',
-      height:'45px', 
-      barColor:'#3C763D', 
-      barSpacing:'2px', 
+      height:'45px',
+      barColor:'#3C763D',
+      barSpacing:'2px',
       barWidth:'35px'
-    }
+    };
 
     $scope.chart_weekly_failure_opts = {
       type:'bar',
-      height:'45px', 
-      barColor:'#A94442', 
-      barSpacing:'2px', 
+      height:'45px',
+      barColor:'#A94442',
+      barSpacing:'2px',
       barWidth:'35px'
-    }
+    };
 
     //Default values
     $scope.weekly_volume = [];
@@ -193,12 +188,18 @@ angular.module('webhooksio.controllers', [])
     $scope.daily_failure = [];
     $scope.daily_failure_total = 0;
 
+    $scope.year = moment().format("YYYY");
+    $scope.month = moment().format("MM");
+    $scope.day = moment().format("DD");
+    $scope.hour = moment().format("HH");
+
+    $scope.utc_hour = moment($scope.year + '-' + $scope.month + '-' + $scope.day + ' ' + $scope.hour + ':00','YYYY-MM-DD HH:mm').utc();
+    $scope.utc_day = moment($scope.year + '-' + $scope.month + '-' + $scope.day + ' 00:00','YYYY-MM-DD HH:mm').utc();
+
     // Last 7 Day stats
-    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, (moment(moment({hour: 0, minute: 0}).subtract('days',7)).utc()/1000),(moment(moment({hour: 0, minute: 0}).add('days',1)).utc()/1000),'day').success(function(data) {
+    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, moment(moment({hour: 0, minute: 0}).subtract('days',7)).utc().format('X'),moment(moment({hour: 0, minute: 0}).add('days',1)).utc().format('X'),'day').success(function(data) {
       $scope.summary = data.summary;
       $scope.detail = data.detail;
-
-      console.log(data);
 
       $scope.weekly_volume_total = $scope.summary.outgoing_messages;
       $scope.weekly_success_total = $scope.summary.outgoing_successful;
@@ -216,12 +217,9 @@ angular.module('webhooksio.controllers', [])
           $scope.showError = true;
     });
 
-
-    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, (moment(moment({hour: 0, minute: 0}).subtract('hours',24)).utc()/1000),(moment(moment({minute: 0}).utc())/1000), 'hour').success(function(data) {
+    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, moment(moment().subtract('hours',24)).utc().format('X'), moment(moment()).utc().format('X'), 'hour').success(function(data) {
       $scope.summary = data.summary;
       $scope.detail = data.detail;
-
-      console.log(data);
 
       $scope.daily_volume_total = $scope.summary.outgoing_messages;
       $scope.daily_success_total = $scope.summary.outgoing_successful;
@@ -268,8 +266,8 @@ angular.module('webhooksio.controllers', [])
     $scope.end_date = moment(moment()).utc();
 
     $scope.date_range_opts = {
-      format: 'YYYY-MM-DD', 
-      startDate:$scope.start_date, 
+      format: 'YYYY-MM-DD',
+      startDate:$scope.start_date,
       endDate:$scope.end_date,
       showDropdowns: true,
       showWeekNumbers: true,
@@ -277,7 +275,7 @@ angular.module('webhooksio.controllers', [])
       timePickerIncrement: 15,
       timePicker12Hour: true,
       ranges: {
-        'Last 10 Minutes': [moment(moment().subtract('minutes',10)).utc(), moment(moment()).utc()],
+        'Last 10 Minutes': [moment(moment().subtract('minutes',10)), moment(moment())],
         'Last 30 Minutes': [moment(moment().subtract('minutes',30)).utc(), moment(moment()).utc()],
         'Last Hour': [moment(moment().subtract('hours',1)).utc(), moment(moment()).utc()],
         'Last 24 Hours': [moment(moment().subtract('hours',24)).utc(), moment(moment()).utc()],
@@ -286,21 +284,21 @@ angular.module('webhooksio.controllers', [])
       },
       opens: 'left',
       
-    }
+    };
 
     $scope.$watch('date_range', function(newVal) {
         if (newVal) {
-              consumerService.getLog($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.bucket_key, moment($scope.start_date).format('X'), moment($scope.end_date).format('X')).success(function(data) { 
+              consumerService.getLog($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.bucket_key, moment($scope.start_date).format('X'), moment($scope.end_date).format('X')).success(function(data) {
                 $scope.requests = data.results.requests;
               }).error(function(data) {
                     $scope.message = data.message || "Request failed";
                     $scope.messagedetails = data.message_detail;
                     $scope.showError = true;
               });
-        } 
+        }
    });
 
-    $scope.date_range = moment($scope.start_date).format('MMMM Do YYYY HH:mm UTC') + ' - ' + moment($scope.end_date).format('MMMM Do YYYY HH:mm UTC')
+    $scope.date_range = moment($scope.start_date).format('MMMM Do YYYY HH:mm UTC') + ' - ' + moment($scope.end_date).format('MMMM Do YYYY HH:mm UTC');
 
 
 
@@ -346,7 +344,7 @@ angular.module('webhooksio.controllers', [])
 
     //Get the list of events:
     consumerService.getDestinations($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.input_id).success(function(data) {
-      $scope.destinations = data.destinations; 
+      $scope.destinations = data.destinations;
     }).error(function(data) {
           $scope.message = data.message || "Request failed";
           $scope.messagedetails = data.message_detail;
@@ -390,7 +388,6 @@ angular.module('webhooksio.controllers', [])
   //Get Auth Options Events
   consumerService.getAuthOptions($scope.urlbase, $scope.apiversion, 'destination').success(function(data) {
       $scope.authoptionList = data;
-      console.log(data)
       $scope.authoptions = [];
       for (var key in data) {
            data[key].type = key;
@@ -424,7 +421,7 @@ angular.module('webhooksio.controllers', [])
                 }
               }
         } else {
-             $scope.events = []; 
+             $scope.events = [];
         }
    });
 
@@ -469,7 +466,7 @@ angular.module('webhooksio.controllers', [])
         if(newVal) {
              for(var i=0;i<$scope.policies.length;i++) {
                   if($scope.policies[i].policy_id == newVal) {
-                       if($scope.policies[i].max_retry_count == null){
+                       if($scope.policies[i].max_retry_count === null){
                             $scope.show_policy_details = false;
                             $scope.retry_count = '';
                             $scope.retry_interval = '';
@@ -533,11 +530,11 @@ angular.module('webhooksio.controllers', [])
                });
           }
           
-     }
+     };
 
     $scope.cancel = function() {
       $scope.changePage('destinations');
-    }
+    };
   
 
   
@@ -609,7 +606,7 @@ angular.module('webhooksio.controllers', [])
                     $scope.retry_interval = data.retry_interval;
                     
                     if(data.verify_ssl){
-                        if(data.verify_ssl == true){
+                        if(data.verify_ssl === true){
                           $scope.verify_ssl = "true";
                         }else{
                           $scope.verify_ssl = "false";
@@ -666,7 +663,7 @@ angular.module('webhooksio.controllers', [])
                 }
               }
         } else {
-             $scope.events = []; 
+             $scope.events = [];
         }
    });
 
@@ -710,7 +707,7 @@ angular.module('webhooksio.controllers', [])
         if(newVal) {
              for(var i=0; i<$scope.policies.length;i++) {
                   if($scope.policies[i].policy_id == newVal) {
-                       if($scope.policies[i].max_retry_count == null){
+                       if($scope.policies[i].max_retry_count === null){
                             $scope.show_policy_details = false;
                             $scope.retry_count = '';
                             $scope.retry_interval = '';
@@ -774,11 +771,11 @@ angular.module('webhooksio.controllers', [])
                });
           }
           
-     }
+     };
 
     $scope.cancel = function() {
       $scope.changePage('destinations');
-    }
+    };
 
 
     $scope.delete = function($destination_id) {
@@ -791,7 +788,7 @@ angular.module('webhooksio.controllers', [])
             $scope.showError = true;
             $scope.resizeFrame();
        });
-    }
+    };
   
    
 

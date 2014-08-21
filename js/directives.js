@@ -3,18 +3,21 @@
 /* Directives */
 
 
-angular.module('webhooksio.directives', []).
-  	directive('appVersion', ['version', function(version) {
-    	return function(scope, elm, attrs) {
-      		elm.text(version);
-    	};
-  	}])
-    .directive('appTitle', ['title', function(title) {
-    	return function(scope, elm, attrs) {
-      		elm.text(title);
-    	};
-  	}])
-    .directive("markdown", function ($compile, $http) {
+angular.module('webhooksio.directives', [])
+
+  .directive('appVersion', ['version', function(version) {
+    return function(scope, elm, attrs) {
+      elm.text(version);
+    };
+  }])
+
+  .directive('appTitle', ['title', function(title) {
+    return function(scope, elm, attrs) {
+      elm.text(title);
+    };
+  }])
+
+  .directive("markdown", function ($compile, $http) {
       var converter = new Showdown.converter();
       return {
           restrict: 'E',
@@ -30,9 +33,9 @@ angular.module('webhooksio.directives', []).
           }
       };
   })
-    .directive('dateRangePicker', [function () {
-      'use strict';
-      return {
+    
+  .directive('dateRangePicker', [function () {
+    return {
           restrict: 'A',
           require: 'ngModel',
           link: function (scope, elem, attrs, ngModel) {
@@ -57,7 +60,7 @@ angular.module('webhooksio.directives', []).
                 $(elem).on('apply.daterangepicker', function(ev, picker) {
                   scope.start_date = picker.startDate;
                   scope.end_date = picker.endDate;
-                  scope.date_range = picker.startDate.format('MMMM Do YYYY HH:mm UTC') + ' - ' + picker.endDate.format('MMMM Do YYYY HH:mm UTC');
+                  scope.date_range = picker.startDate.utc().format('MMM Do HH:mm UTC') + ' - ' + picker.endDate.utc().format('MMM Do HH:mm UTC');
                   scope.$apply();
                   scope.resizeFrame();
                 });
@@ -76,10 +79,9 @@ angular.module('webhooksio.directives', []).
             };
            
           }
-      }
+      };
     }])
     .directive('resizeTab', [function () {
-      'use strict';
       return {
           restrict: 'ACE',
           link: function (scope, elem) {
@@ -89,10 +91,9 @@ angular.module('webhooksio.directives', []).
                     scope.resizeFrame();
                 });
           }
-      }
+      };
     }])
     .directive('jqSparkline', [function () {
-      'use strict';
       return {
           restrict: 'A',
           require: 'ngModel',
@@ -121,7 +122,7 @@ angular.module('webhooksio.directives', []).
                   $(elem).sparkline(data, opts);
               };
           }
-      }
+      };
     }])
     .directive('viewIntroduction', function() {
       return {
@@ -131,7 +132,7 @@ angular.module('webhooksio.directives', []).
         link: function(scope, elem, attrs) {
           scope.resizeFrame();
         }
-      }
+      };
     })
     .directive('viewDashboard', function() {
       return {
@@ -141,7 +142,7 @@ angular.module('webhooksio.directives', []).
         link: function(scope, elem, attrs) {
           scope.resizeFrame();
         }
-      }
+      };
     })
     .directive('viewDocs', function() {
       return {
@@ -151,7 +152,7 @@ angular.module('webhooksio.directives', []).
         link: function(scope, elem, attrs) {
           scope.resizeFrame();
         }
-      }
+      };
     })
     .directive('viewDestinations', function() {
       return {
@@ -161,7 +162,7 @@ angular.module('webhooksio.directives', []).
         link: function(scope, elem, attrs) {
           scope.resizeFrame();
         }
-      }
+      };
     })
     .directive('viewLogs', function() {
       return {
@@ -171,7 +172,7 @@ angular.module('webhooksio.directives', []).
         link: function(scope, elem, attrs) {
           scope.resizeFrame();
         }
-      }
+      };
     })
     .directive('viewLog', function() {
       return {
@@ -181,7 +182,7 @@ angular.module('webhooksio.directives', []).
         link: function(scope, elem, attrs) {
           scope.resizeFrame();
         }
-      }
+      };
     })
     .directive('addDestination', function() {
       return {
@@ -191,7 +192,7 @@ angular.module('webhooksio.directives', []).
         link: function(scope, elem, attrs) {
           scope.resizeFrame();
         }
-      }
+      };
     })
     .directive('editDestination', function() {
       return {
@@ -201,5 +202,5 @@ angular.module('webhooksio.directives', []).
         link: function(scope, elem, attrs) {
           scope.resizeFrame();
         }
-      }
+      };
     });

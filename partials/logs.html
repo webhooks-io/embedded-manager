@@ -2,12 +2,17 @@
 	<header class="header bg-white b-b">
 		<h2>Event Logs</h2>
 	</header>
-	<div id="daterange" class="selectbox pull-right" date-range-picker ng-model="date_range" opts="{{date_range_opts}}">
-		<i class="fa fa-calendar"></i>
-		<span>{{date_range}}</span> <b class="caret"></b>
-	</div>
 
 	<section class="scrollable wrapper">
+
+		<div class="row">
+			<div class="col-sm-12">
+				<div id="daterange" class="selectbox pull-right" date-range-picker ng-model="date_range" opts="{{date_range_opts}}">
+					<i class="fa fa-calendar"></i>
+					<span>{{date_range}}</span> <b class="caret"></b>
+				</div>
+			</div>
+		</div>
 		
 		<div class="row">
 			<div class="table-responsive">
@@ -15,19 +20,20 @@
 			      <thead>
 			        <tr>
 			          <th>Event</th>
-			          <th>Desintation</th>
-			          <th>Status | Attempts</th>
-			          <th>Response Code</th>
+			          <th>Destination</th>
+			          <th>Status</th>
+			          <th>Last Request Date</th>
 			          <th>&nbsp;</th>
 			        </tr>
 			      </thead>
 			      <tbody>
 			        <tr class="success" ng-repeat="request in requests">
 			          <td>{{request.event_type}}</td>
-			          <td>{{destination_name}}<br /><!--<small>https://webhooks.io/clientcreated</small>--></td>
-			          <td><span class="badge alert-info"><span ng-class="{text-success:request.status == 'sent', text-danger:request.status == 'failed', text-danger:request.status == 'queued'}">{{request.status}}  | {{request.attempts}}</span></span></td>
-			          <td>{{request.http_response_code}}</td>
-			          <td class="text-center"><button type="button" class="btn btn-xs btn-info" ng-click="changePage('viewlog',request.output_id)">View Details</button></td>
+			          <td>{{request.destination_name}}<br /></td>
+			          <!--, text-danger:request.status == 'failed', text-danger:request.status == 'queued'}-->
+			          <td><span class="badge alert-info"><span ng-class="{'text-success': request.status == 'sent', 'text-danger':request.status == 'failed', 'text-danger':request.status == 'queued'}">{{request.status}}:{{request.http_response_code}}</span></span></td>
+			          <td>{{relativeDateFormat(request.date_last_attempted, 'YYYY-MM-DDTHH:mm:ss.SSSZ')}}</td>
+			          <td class="text-center"><button type="button" class="btn btn-xs btn-info" ng-click="changePage('viewlog',request.outgoing_message_id)">View Details</button></td>
 			        </tr>
 			        <tr ng-if="!requests.length">
 			        	<td colspan="5">
@@ -36,29 +42,30 @@
     						</div>
     					</td>
 			        </tr>
-			        
+			        <!--
 			        <tr class="success">
 			          <td>client.create</td>
 			          <td>Client Created to IO<br /><small>https://webhooks.io/clientcreated</small></td>
-			          <td><span class="badge alert-info"><span class="text-success">sent  / 1</span></span></td>
-			          <td>200</td>
+			          <td><span class="badge alert-info"><span class="text-success">sent | 200</span></span></td>
+			          <td>2014-08-06T12:15:40.040Z</td>
 			          <td class="text-center"><button type="button" class="btn btn-xs btn-info" ng-click="changePage('viewlog',1)">View Details</button></td>
 			        </tr>
 			        <tr class="danger">
 			          <td>client.create</td>
 			          <td>Client Created to IO<br /><small>https://webhooks.io/clientcreated</small></td>
-			          <td><span class="badge  alert-info"><span class="text-danger">failure  | 10</span></span></td>
-			          <td>503</td>
+			          <td><span class="badge  alert-info"><span class="text-danger">failed | 503</span></span></td>
+			          <td>2014-08-06T12:15:40.040Z</td>
 			          <td class="text-center"><button type="button" class="btn btn-xs btn-info" ng-click="changePage('viewlog',1)">View Details</button></td>
 			        </tr>
 			        
 			       	<tr class="warning">
 			          <td>client.create</td>
 			          <td>Client Created to IO<br /><small>https://webhooks.io/clientcreated</small></td>
-			          <td><span class="badge alert-info"><span class="text-warning">queued  / 3</span></span></td>
-			          <td>404</td>
+			          <td><span class="badge alert-info"><span class="text-warning">queued | 404</span></span></td>
+			          <td>2014-08-06T12:15:40.040Z</td>
 			          <td class="text-center"><button type="button" class="btn btn-xs btn-info" ng-click="changePage('viewlog',1)">View Details</button></td>
 			        </tr>
+			    	-->
 			        
 			      </tbody>
 			    </table>

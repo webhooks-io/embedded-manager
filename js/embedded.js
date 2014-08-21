@@ -49,13 +49,12 @@ window.wh = {
 
         // Listen for a message from the iframe.
         eventer(messageEvent, function(e) {
-            //console.log('Resize to: ' + e.data);
         if (e.origin !== origin || isNaN(e.data)) return;
             document.getElementById(frm.id).style.height = e.data + 'px';
         }, false);
 
 	}
 
-}
+};
 
 
