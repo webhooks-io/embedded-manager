@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Installation
 
 If you are using a client library the process to embed the views is very straight forward.  The client library basically is providing a shortcut for the slightly longer manual method outlined below.
