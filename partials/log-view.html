@@ -14,44 +14,42 @@
                   <span class="badge alert-warning" ng-if="message_details.status == 're-queued'">{{message_details.status}}</span>
                   <span class="badge alert-danger" ng-if="message_details.status == 'failed'">{{message_details.status}}</span>
                   <span class="badge alert-info" ng-if="message_details.status == 'partial'">{{message_details.status}}</span>
-                  Delivery Status:<span ng-if="message_details.status.length > 0"> <i>{{message_details.status_message}} </i></span>
+                  Delivery Status:
                 </a>
                 <a class="list-group-item" ng-if="message_details.status_message.length > 0">
                   Delivery Status Message:   <span class="pull-right"><i>{{message_details.status_message}}</i></span>
                 </a>
                 <a class="list-group-item">
-                  <span class="badge bg-info">{{message_details.outgoing_message.attempt_count}}</span>
+                  <span class="badge bg-info">{{message_details.attempt_count}}</span>
                   Delivery Attempts:
                 </a>
                 <a class="list-group-item">
-                  <span class="pull-right">{{relativeDateFormat(message_details.outgoing_message.date_last_attempted, 'YYYY-MM-DDTHH:mm:ss.SSSZ')}}</span>
+                  <span class="pull-right">{{relativeDateFormat(message_details.date_last_attempted, 'YYYY-MM-DDTHH:mm:ss.SSSZ')}}</span>
                   Last Send Attempt:
                 </a>
          	</div>
 
-            <!--// Resend ability will be added later.
             <br />
             <button type="button" class="btn btn-info col-sm-12" ng-click="resend()"><i class="fa fa-retweet"></i> Resend Event</button>
-        	-->
             <br /><br />
 
 		</div>
 	</div>
 	<h3>Delivery Attempts</h3>
 	<div class="row">
-		<div class="col-sm-4">
-			<section class="scrollable wrapper">
+		<div class="col-sm-3">
+			<section class="scrollable wrapper tabbable tabs-left">
 				<br />
-				<ul class="nav nav-pills nav-stacked">
-			      <li data-target="#step{{$index}}" ng-class="{'active': $first}" ng-repeat="attempt in message_details.outgoing_message.attempts | orderBy:'date_attempted'"><a data-toggle="tab" data-target="#step{{$index}}">Attempt #{{$index+1}} ({{relativeDateFormat(attempt.date_attempted, 'YYYY-MM-DDTHH:mm:ss.SSSZ')}})</a></li>
+				<ul class="nav nav-tabs">
+			      <li data-target="#step{{$index}}" ng-class="{'active': $first}" ng-repeat="attempt in message_details.attempts | orderBy:'date_attempted'"><a data-toggle="tab" data-target="#step{{$index}}" href="#step{{$index}}">Attempt #{{$index+1}} ({{relativeDateFormat(attempt.date_attempted, 'YYYY-MM-DDTHH:mm:ss.SSSZ')}})</a></li>
 			    </ul>
 			</section>
 		</div>
-		<div class="col-sm-8">
+		<div class="col-sm-9">
 			<section class="scrollable wrapper">
 				<div class="tab-content">
 
-					 <div id="step{{$index}}" class="step-pane" ng-class="{'active': $first}" ng-repeat="attempt in message_details.outgoing_message.attempts | orderBy:'date_attempted'">
+					 <div id="step{{$index}}" class="tab-pane" ng-class="{'active': $first}" ng-repeat="attempt in message_details.attempts | orderBy:'date_attempted'">
 
 					 	<div class="panel panel-default">
 					 		<div class="panel-heading">
@@ -61,11 +59,19 @@
 								<div class="list-group bg-white">
 
 									<a class="list-group-item">
-					                  	<span class="pull-right">#{{$index+1}}</span>
-					                  	Attempt:
+					                  	<span class="pull-right"><span class="badge alert-info">{{$index+1}}</span></span>
+					                  	Attempt #:
 					                </a>
 					                <a class="list-group-item">
-					                  	<span ng-class="{'pull-right badge alert-success': attempt.status === 'sent','pull-right badge alert-danger': attempt.status === 'failed'}">{{attempt.status}}</span>
+					                	<span class="badge alert-success" ng-if="attempt.status == 'sent'">{{attempt.status}}</span>
+                  						<span class="badge alert-warning" ng-if="attempt.status == 'queued'">{{attempt.status}}</span>
+						                 <span class="badge alert-warning" ng-if="attempt.status == 're-queued'">{{attempt.status}}</span>
+						                 <span class="badge alert-danger" ng-if="attempt.status == 'failed'">{{attempt.status}}</span>
+						                 <span class="badge alert-danger" ng-if="attempt.status == 'failure'">{{attempt.status}}</span>
+						                 <span class="badge alert-info" ng-if="attempt.status == 'partial'">{{attempt.status}}</span>
+					                	<!--
+					                  	<span class="pull-right badge" ng-class="{alert-danger': attempt.status == 'failure', 'alert-danger': attempt.status == 'failed', 'alert-warning': attempt.status == 'queued', 'alert-warning': attempt.status == 're-queued', 'alert-default': attempt.status == 'filtered'}">{{attempt.status}}</span>
+					                  -->
 
 					                  	Delivery Status:
 					                </a>
@@ -88,7 +94,7 @@
 				                    <div class="form-group">
 				                      <label class="col-sm-2 control-label">Endpoint URL</label>
 				                      <div class="col-sm-10">
-				                        <input class="form-control" type="text" readonly value="{{message_details.outgoing_message.message_url}}">
+				                        <input class="form-control" type="text" readonly value="{{message_details.message.url}}">
 				                        <span class="help-block m-b-none">The URL where delivery is attempted.</span>
 				                      </div>
 				                    </div>
@@ -97,14 +103,14 @@
 				                     <div class="form-group">
 				                      <label class="col-sm-2 control-label">Content Type</label>
 				                      <div class="col-sm-10">
-				                        <input class="form-control" type="text" readonly value="{{message_details.outgoing_message.message_content_type}}">
+				                        <input class="form-control" type="text" readonly value="{{message_details.message.content_type}}">
 				                      </div>
 				                    </div>
 
 				                     <div class="form-group">
 				                      <label class="col-sm-2 control-label">Method</label>
 				                      <div class="col-sm-10">
-				                        <input class="form-control" type="text" readonly value="{{message_details.outgoing_message.message_method}}">
+				                        <input class="form-control" type="text" readonly value="{{message_details.message.method}}">
 				                      </div>
 				                    </div>
 
@@ -113,7 +119,7 @@
 				                      <label class="col-sm-2 control-label">Headers</label>
 				                      <div class="col-sm-10">
 				                        <div class="list-group bg-white">
-							                <a class="list-group-item" ng-repeat="(key, value) in message_details.outgoing_message.message_headers">
+							                <a class="list-group-item" ng-repeat="(key, value) in message_details.message.headers">
 							                  <strong>{{key}}:</strong> &nbsp; &nbsp; {{value}}
 							                </a>
 							               
@@ -127,7 +133,7 @@
 				                      <label class="col-sm-2 control-label">Query Params</label>
 				                      <div class="col-sm-10">
 				                        <div class="list-group bg-white">
-							                <a class="list-group-item" ng-repeat="(key, value) in message_details.outgoing_message.message_query_string">
+							                <a class="list-group-item" ng-repeat="(key, value) in message_details.query_string">
 							                  <strong>{{key}}:</strong> &nbsp; &nbsp; {{value}}
 							                </a>
 							               
@@ -139,7 +145,7 @@
 				                    <div class="form-group">
 				                      <label class="col-sm-2 control-label">Body</label>
 				                      <div class="col-sm-10">
-				                      	<textarea readonly="true" style="width:100%; height:200px;">{{message_details.outgoing_message.message_body}}</textarea>
+				                      	<textarea class="form-control" rows="20" readonly>{{message_details.body}}</textarea>
 				                      </div>
 				                    </div>
 
@@ -156,27 +162,38 @@
 							</div>
 							<div class="panel-body">
 
-			                     <div class="form-group">
-			                      <label class="col-sm-2 control-label">Response Headers</label>
-			                      <div class="col-sm-10">
-			                        <div class="list-group bg-white">
-						                <a class="list-group-item" ng-repeat="(key, value) in attempt.reponse_headers">
-						                  <strong>{{key}}:</strong> &nbsp; &nbsp; {{value}}
-						                </a>
-						               
-					             	</div>
+								<form class="form-horizontal">
 
-			                      </div>
-			                    </div>
+									<div class="form-group">
+				                      <label class="col-sm-2 control-label">Response Code</label>
+				                      <div class="col-sm-10">
+				                        <input class="form-control" type="text" readonly value="{{attempt_details.status}}">
+				                      </div>
+				                    </div>
 
-			                    <div class="line line-dashed line-lg pull-in"></div>
+				                    <div class="form-group">
+					                      <label class="col-sm-2 control-label">Headers</label>
+					                      <div class="col-sm-10">
+					                        <div class="list-group bg-white">
+								                <a class="list-group-item" ng-repeat="(key, value) in attempt_details.headers">
+								                  <strong>{{key}}:</strong> &nbsp; &nbsp; {{value}}
+								                </a>
+								               
+							             	</div>
 
-			                    <div class="form-group">
-			                      <label class="col-sm-2 control-label">Response Body</label>
-			                      <div class="col-sm-10">
-			                      	<textarea class="form-control" rows="20" readonly>{{attempt.response_body}}</textarea>
-			                      </div>
-			                    </div>
+					                      </div>
+					                    </div>
+
+				                    <div class="line line-dashed line-lg pull-in"></div>
+
+				                    <div class="form-group">
+				                      <label class="col-sm-2 control-label">Response Body</label>
+				                      <div class="col-sm-10">
+				                      	<textarea class="form-control" rows="20" readonly>{{attempt_details.body}}</textarea>
+				                      </div>
+				                    </div>
+
+			               	 	</form>
 			                </div>
 			            </div>
 

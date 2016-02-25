@@ -124,7 +124,6 @@
                getOutgoingMessage: function($urlbase, $apiversion, $sub_account_id, $outgoing_message_id) {
                     $http.defaults.useXDomain = true;
                     delete $http.defaults.headers.common['X-Requested-With'];
-                    //return $http.get('http://embedded.dev.webhooks.io/samples/outgoingmessage_response.json').success(function(result) {
                     return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/outgoing/' + $outgoing_message_id).success(function(result) {
                          return result.data;
                     }).error(function(result, status) {
@@ -132,6 +131,26 @@
 
                     });
                },
+               getOutgoingMessageAttempt: function($urlbase, $apiversion, $sub_account_id, $attempt_id) {
+                    $http.defaults.useXDomain = true;
+                    delete $http.defaults.headers.common['X-Requested-With'];
+                    return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/attempts/' + $attempt_id + '?include_attempt_detail=true').success(function(result) {
+                         return result.data;
+                    }).error(function(result, status) {
+                         return result;
+
+                    });
+               },
+               getIntroductionText: function($url) {
+                    $http.defaults.useXDomain = true;
+                    delete $http.defaults.headers.common['X-Requested-With'];
+                    return $http.get($url).success(function(result) {
+                         return result.data;
+                    }).error(function(result, status) {
+                         return result;
+
+                    });
+               }
           };
      });
 }());

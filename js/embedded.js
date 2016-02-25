@@ -31,6 +31,9 @@ window.wh = {
 	display: function(token, opts) {
 		var params = this.buildOpts(token, opts);
 
+
+
+
 		var frm = document.createElement('iframe');
 		frm.id = 'webhooksio-embedded';
 		frm.setAttribute('src',params.src);
@@ -52,7 +55,6 @@ window.wh = {
         if (e.origin !== origin || isNaN(e.data)) return;
             document.getElementById(frm.id).style.height = e.data + 'px';
         }, false);
-
 	}
 
 };

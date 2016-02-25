@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('webhooksio.controllers', [])
+angular.module('webhooksio.controllers', ['ngSanitize'])
 
 
 // ===================================================================
@@ -40,11 +40,11 @@ angular.module('webhooksio.controllers', [])
     //Get URL Parameters
     $scope.getURLParams();
 
-  //Default Values
-    if(!$scope.params.url_base){
+    //Default Values
+    if(!$scope.params.api_url){
       $scope.urlbase = 'https://api.webhooks.io';
     }else{
-      $scope.urlbase = $scope.params.url_base;
+      $scope.urlbase = $scope.params.api_url;
     }
 
     if(!$scope.params.api_version){
@@ -53,29 +53,45 @@ angular.module('webhooksio.controllers', [])
       $scope.apiversion = $scope.params.api_version;
     }
 
-    if($scope.params.show_introduction == 'no-destinations'){
+    if($scope.params.show_introduction === undefined) {
+      $scope.params.show_introduction = 'no-destinations';
+    }
+
+    // Default authorization
+    $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.params.token;
+
+    //Destinations?
+    consumerService.getDestinations($scope.urlbase, $scope.apiversion, $scope.params.sub_account_id, $scope.params.input_id).success(function(data) {
+      $scope.destinations = data.destinations;
+    }).error(function(data) {
+          $scope.message = data.message || "Request failed";
+          $scope.messagedetails = data.message_detail;
+          $scope.showError = true;
+    });
+
+    // introducton display?
+    if($scope.params.show_introduction == 'always') {
       $scope.show_introduction = true;
-    }else if($scope.params.show_introduction){
-      if($scope.params.show_introduction === "true"){
-        $scope.show_introduction = true;
-      }else{
-        $scope.show_introduction = false;
-      }
-    }else if(!$scope.params.show_introduction){
-      $scope.show_introduction = true;
-    }else{
+    } else if($scope.params.show_introduction == 'never') {
+      $scope.show_introduction = false;
+    } else if ($scope.params.show_introduction == 'no-destinations' && $scope.destinations !== undefined && $scope.destinations.length > 0) {
+      $scope.show_introduction = false;
+    } else {
       $scope.show_introduction = true;
     }
 
-    if((!$scope.params.default_tab || $scope.params.default_tab == 'introduction') && !$scope.show_introduction){
+    // default tab?
+    if( $scope.params.default_tab === undefined || $scope.params.default_tab === '' || ( $scope.params.default_tab == 'introduction' && $scope.show_introduction === false ) ){
       $scope.params.default_tab = 'dashboard';
     }
 
-    if(!$scope.params.default_tab){
-      $scope.currentview = 'dashboard';
-    }else{
-      $scope.currentview = $scope.params.default_tab;
+    if( $scope.params.introduction_url === undefined) {
+      $scope.introduction_url =  "";
+    } else {
+      $scope.introduction_url = $scope.params.introduction_url;
     }
+
+    $scope.currentview = $scope.params.default_tab;
 
     $scope.account_id = $scope.params.account_id;
     $scope.sub_account_id = $scope.params.sub_account_id;
@@ -85,10 +101,7 @@ angular.module('webhooksio.controllers', [])
     $scope.consumer_id = $scope.params.consumer_id;
     $scope.api_token = $scope.params.token;
     $scope.bucket_key = $scope.params.bucket_key;
-
-
-    // Default authorization
-    $http.defaults.headers.common.Authorization = 'client-token-bearer ' + $scope.api_token;
+   
 
     }])
     .controller('DestinationCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
@@ -179,14 +192,30 @@ angular.module('webhooksio.controllers', [])
     $scope.weekly_volume_total = 0;
     $scope.weekly_success = [];
     $scope.weekly_success_total = 0;
-    $scope.weekly_failure = [];
+    $scope.weekly_failure400 = [];
+    $scope.weekly_failure400_total = 0;
+    $scope.weekly_failure500 = [];
+    $scope.weekly_failure500_total = 0;
+    $scope.weekly_filtered = [];
+    $scope.weekly_filtered_total = 0;
+    $scope.weekly_deliverability = '100';
     $scope.weekly_failure_total = 0;
+
     $scope.daily_volume = [];
     $scope.daily_volume_total = 0;
     $scope.daily_success = [];
     $scope.daily_success_total = 0;
-    $scope.daily_failure = [];
+    $scope.daily_failure400 = [];
+    $scope.daily_failure400_total = 0;
+    $scope.daily_failure500 = [];
+    $scope.daily_failure500_total = 0;
+    $scope.daily_filtered = [];
+    $scope.daily_filtered_total = 0;
+    $scope.daily_deliverability = '100';
     $scope.daily_failure_total = 0;
+
+    $scope.queued_total = 0;
+    $scope.pending_total = 0;
 
     $scope.year = moment().format("YYYY");
     $scope.month = moment().format("MM");
@@ -203,13 +232,26 @@ angular.module('webhooksio.controllers', [])
 
       $scope.weekly_volume_total = $scope.summary.outgoing_messages;
       $scope.weekly_success_total = $scope.summary.outgoing_successful;
-      $scope.weekly_failure_total = $scope.getTotalFromArray($scope.summary.outgoing_400, $scope.summary.outgoing_500);
+      $scope.weekly_failure400_total = $scope.summary.outgoing_400;
+      $scope.weekly_failure500_total = $scope.summary.outgoing_500;
+      $scope.weekly_filtered_total = $scope.summary.filtered;
 
       for(var d=0;d<$scope.detail.length;d++){
-        $scope.weekly_volume.push($scope.detail[0].outgoing_messages);
-        $scope.weekly_success.push($scope.detail[0].outgoing_successful);
-        $scope.weekly_failure.push($scope.detail[0].outgoing_400 + $scope.detail[0].outgoing_500);
+        $scope.weekly_volume.push($scope.detail[d].outgoing_messages);
+        $scope.weekly_success.push($scope.detail[d].outgoing_successful);
+        $scope.weekly_failure400.push($scope.detail[d].outgoing_400);
+        $scope.weekly_failure500.push($scope.detail[d].outgoing_500);
+        $scope.weekly_filtered.push($scope.detail[d].filtered);
       }
+
+      if(($scope.weekly_success_total + $scope.weekly_failure400_total + $scope.weekly_failure500_total) > 0) {
+        $scope.weekly_deliverability = Math.round($scope.weekly_success_total / ($scope.weekly_success_total + $scope.weekly_failure400_total + $scope.weekly_failure500_total) * 100);
+      }
+
+      $scope.weekly_failure_total = $scope.weekly_failure400_total + $scope.weekly_failure500_total;
+
+      $scope.queued_total = $scope.summary.queued;
+      $scope.pending_total = $scope.summary.pending_retry;
 
     }).error(function(data) {
           $scope.message = data.message || "Request failed";
@@ -223,13 +265,25 @@ angular.module('webhooksio.controllers', [])
 
       $scope.daily_volume_total = $scope.summary.outgoing_messages;
       $scope.daily_success_total = $scope.summary.outgoing_successful;
-      $scope.daily_failure_total = $scope.getTotalFromArray($scope.summary.outgoing_400, $scope.summary.outgoing_500);
+      $scope.daily_failure400_total = $scope.summary.outgoing_400;
+      $scope.daily_failure500_total = $scope.summary.outgoing_500;
+      $scope.daily_filtered_total = $scope.summary.filtered;
 
       for(var d=0;d<$scope.detail.length;d++){
-        $scope.daily_volume.push($scope.detail[0].outgoing_messages);
-        $scope.daily_success.push($scope.detail[0].outgoing_successful);
-        $scope.daily_failure.push($scope.detail[0].outgoing_400 + $scope.detail[0].outgoing_500);
+        $scope.daily_volume.push($scope.detail[d].outgoing_messages);
+        $scope.daily_success.push($scope.detail[d].outgoing_successful);
+        $scope.daily_failure400.push($scope.detail[d].outgoing_400);
+        $scope.daily_failure500.push($scope.detail[d].outgoing_500);
+        $scope.daily_filtered.push($scope.detail[d].filtered);
       }
+
+      if(($scope.daily_success_total + $scope.daily_failure400_total + $scope.daily_failure500_total) > 0) {
+        $scope.daily_deliverability = Math.round($scope.daily_success_total / ($scope.daily_success_total + $scope.daily_failure400_total + $scope.daily_failure500_total) * 100);
+      }
+
+      $scope.daily_failure_total = $scope.daily_failure400_total + $scope.daily_failure500_total;
+
+      console.log($scope.daily_volume);
 
 
     }).error(function(data) {
@@ -237,20 +291,30 @@ angular.module('webhooksio.controllers', [])
           $scope.messagedetails = data.message_detail;
           $scope.showError = true;
     });
-
-
-
-    
-
-    
-
-
-   
-
     
       
 
-    }])
+  }])
+
+
+
+// ===================================================================
+// Introduction Controller
+// ===================================================================
+    .controller('IntroductionCtrl', ['$scope', '$location', '$http', 'consumerService', function($scope, $location, $http, consumerService) {
+
+    consumerService.getIntroductionText($scope.introduction_url).success(function(data) {
+        $scope.intro_text = $scope.parseMarkdown(data);
+      }).error(function(data) {
+            $scope.intro_text = "<p>Introduction text not available.</p>";
+      });
+
+
+
+
+
+  }])
+
 
 
 // ===================================================================
@@ -320,9 +384,22 @@ angular.module('webhooksio.controllers', [])
       $scope.outgoing_message_id = $scope.passedid;
     }
 
-    //Get the list of events:
+    //Get the message detail:
     consumerService.getOutgoingMessage($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.outgoing_message_id).success(function(data) {
       $scope.message_details = data;
+      if($scope.message_details.attempts.length > 0) {
+        
+        $scope.attempt_id = $scope.message_details.attempts[0].attempt_id;
+
+        // Get the first attempt
+        consumerService.getOutgoingMessageAttempt($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.attempt_id).success(function(data) {
+          $scope.attempt_details = data.detail.response;
+        }).error(function(data) {
+              $scope.message = data.message || "Request failed";
+              $scope.messagedetails = data.message_detail;
+              $scope.showError = true;
+        });
+      }
     }).error(function(data) {
           $scope.message = data.message || "Request failed";
           $scope.messagedetails = data.message_detail;
@@ -505,6 +582,7 @@ angular.module('webhooksio.controllers', [])
                //Set the params into a JSON string
                var postdata =  $.param({
                     bucket_key: $scope.bucket_key,
+                    application_id: $scope.application_id,
                     application_version_id: $scope.application_version_id,
                     name: $scope.name,
                     endpoint_url : $scope.endpoint_url,
@@ -520,7 +598,7 @@ angular.module('webhooksio.controllers', [])
                });
                
                consumerService.createDestination($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.input_id, postdata).success(function(data) {
-                     $scope.showMessage({title:'Success', text: 'The destination has been created!'});
+                    $scope.showMessage({title:'Success', text: 'The destination has been created!'});
                     $scope.changePage('destinations');
                }).error(function(data) {
                     $scope.message = data.message || "Request failed";

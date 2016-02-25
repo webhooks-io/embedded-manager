@@ -104,13 +104,13 @@ angular.module('webhooksio.directives', [])
               opts.type = attrs.type || 'line';
 
               scope.$watch(attrs.ngModel, function () {
-                  render();
+                render();
               });
               
               scope.$watch(attrs.opts, function(){
                 render();
-              }
-                );
+              });
+
               var render = function () {
                   var model;
                   if(attrs.opts) angular.extend(opts, angular.fromJson(attrs.opts));

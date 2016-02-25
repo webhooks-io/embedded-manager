@@ -1,10 +1,54 @@
 <section class="vbox" ng-controller="DashboardCtrl">
 	<section class="scrollable wrapper">
+
+    <!--
 		<header class="header bg-white b-b">
 			<h3>Last 24 Hours</h3>
 		</header>
+    -->
 		<div class="row">
 
+
+      <div class="panel panel-default"> 
+        <div class="panel-heading">
+              <h2 class="panel-title"><i class="fa fa-tachometer"></i> Deliverability - 24 Hours </h2>
+          </div>
+          <div class="panel-body">
+            
+          <div class="text-center">
+            <div class="col-xs-2 b-r">
+              <p class="h3 font-bold m-t">{{daily_deliverability}}%</p>
+              <p class="text-muted">Deliverability</p>
+            </div>
+            <div class="col-xs-2 b-r bg-primary">
+                <p class="h3 font-bold m-t">{{daily_volume_total}}</p>
+                <p class="">Volume</p>
+            </div>
+            <div class="col-xs-2 b-r bg-success">
+                <p class="h3 font-bold m-t">{{daily_success_total}}</p>
+                <p class="text-muted">Successful Deliveries</p>
+            </div>
+            <div class="col-xs-2 b-r bg-warning">
+                <p class="h3 font-bold m-t">{{daily_failure400_total}}</p>
+                <p class="text-muted">4xx Failures</p>
+            </div>
+            <div class="col-xs-2 bg-danger">
+                <p class="h3 font-bold m-t">{{daily_failure500_total}}</p>
+                <p class="text-muted">5xx Failures</p>
+            </div>
+            <div class="col-xs-2 bg-info">
+                <p class="h3 font-bold m-t">{{daily_filtered_total}}</p>
+                <p class="text-muted">Filtered</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+          <!--
 	        <div class="col-xs-4">
 	        	<section class="panel bg-info lter no-borders">
                 	<div class="panel-body">
@@ -16,7 +60,7 @@
                 	<footer class="panel-footer lt" ng-if="daily_volume > 0">
                   		<div class="row">
 		                    <div class="col-xs-12">
-		                      <span jq-sparkline ng-model="daily_volume" opts="{{chart_daily_volume_opts}}"  />
+		                      <span spark ng-model="daily_volume" opts="{{chart_daily_volume_opts}}"  />
 		                    </div>
                   		</div>
                 	</footer>
@@ -56,15 +100,62 @@
                 	</footer>
               	</section>
 	        </div>
+        -->
+          
+
+
+
 	    </div>
 	    <div class="row">
 	    	<hr />
 	    </div>
+
+      <!--
 	    <header class="header bg-white b-b">
-			<h3>Last 7 Days</h3>
-		</header>
+  			<h3>Last 7 Days</h3>
+  		</header>
+      -->
 	    <div class="row">
 
+
+
+        <div class="panel panel-default"> 
+        <div class="panel-heading">
+              <h2 class="panel-title"><i class="fa fa-tachometer"></i> Deliverability - 7 Days </h2>
+          </div>
+          <div class="panel-body">
+            
+          <div class="text-center">
+            <div class="col-xs-2 b-r">
+              <p class="h3 font-bold m-t">{{weekly_deliverability}}%</p>
+              <p class="text-muted">Deliverability</p>
+            </div>
+            <div class="col-xs-2 b-r bg-primary">
+                <p class="h3 font-bold m-t">{{weekly_volume_total}}</p>
+                <p class="">Volume</p>
+            </div>
+            <div class="col-xs-2 b-r bg-success">
+                <p class="h3 font-bold m-t">{{weekly_success_total}}</p>
+                <p class="text-muted">Successful Deliveries</p>
+            </div>
+            <div class="col-xs-2 b-r bg-warning">
+                <p class="h3 font-bold m-t">{{weekly_failure400_total}}</p>
+                <p class="text-muted">4xx Failures</p>
+            </div>
+            <div class="col-xs-2 bg-danger">
+                <p class="h3 font-bold m-t">{{weekly_failure500_total}}</p>
+                <p class="text-muted">5xx Failures</p>
+            </div>
+            <div class="col-xs-2 bg-info">
+                <p class="h3 font-bold m-t">{{weekly_filtered_total}}</p>
+                <p class="text-muted">Filtered</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+          <!--
 	        <div class="col-xs-4">
 	        	<section class="panel bg-info lter no-borders">
                 	<div class="panel-body">
@@ -116,7 +207,34 @@
                 	</footer>
               	</section>
 	        </div>
+        -->
+          
+
+
+
+
 	    </div>
+
+      <div class="row">
+        <div class="panel panel-default ng-scope"> 
+          <div class="panel-heading">
+                <h2 class="panel-title"><i class="fa fa-refresh"></i> In Process Hooks</h2>
+            </div>
+            <div class="panel-body">
+
+            <div class="text-center">
+              <div class="col-xs-6 b-r">
+                <p class="h3 font-bold m-t ng-binding">{{queued_total}}</p>
+                <p class="text-muted">Queued for Delivery</p>
+              </div>
+              <div class="col-xs-6">
+                <p class="h3 font-bold m-t ng-binding">{{pending_total}}</p>
+                <p class="text-muted">Pending Resend/Retry</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 	</section>
 </section>
 
