@@ -1,4 +1,4 @@
-var origin = 'http://embedded.dev.webhooks.io';
+var origin = 'https://embedded.webhooks.io';
 window.wh = {
 	buildOpts: function(token, opts) {
         var frmParams = ["width","height","src","token","element_id"];
