@@ -283,8 +283,6 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
 
       $scope.daily_failure_total = $scope.daily_failure400_total + $scope.daily_failure500_total;
 
-      console.log($scope.daily_volume);
-
 
     }).error(function(data) {
           $scope.message = data.message || "Request failed";
