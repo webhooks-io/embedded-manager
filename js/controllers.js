@@ -403,6 +403,25 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
           $scope.messagedetails = data.message_detail;
           $scope.showError = true;
     });
+
+    $scope.resend = function() {
+
+        var postdata = $.param({
+            outgoing_message_ids: $scope.outgoing_message_id
+        });
+
+        consumerService.resendOutgoingMessage($scope.urlbase, $scope.apiversion, $scope.sub_account_id, postdata).success(function(data) {
+           
+            $scope.showMessage({
+                title: 'Success',
+                text: 'Request has been resent as a new request.  Please refresh the log to pull an updated list'
+            });
+        }).error(function(data) {
+            $scope.message = data.message || "Request failed";
+            $scope.messagedetails = data.message_detail;
+            $scope.showError = true;
+        });
+    };
    
 
   }])

@@ -150,7 +150,18 @@
                          return result;
 
                     });
-               }
+               },
+               resendOutgoingMessage: function($urlbase, $apiversion, $sub_account_id, $postparams) {
+                     $http.defaults.useXDomain = true;
+                     $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+                     delete $http.defaults.headers.common['X-Requested-With'];
+                     return $http.post($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/resend', $postparams).success(function(result) {
+                         return result.data;
+                     }).error(function(result, status) {
+                         return result;
+
+                     });
+                 }
           };
      });
 }());
