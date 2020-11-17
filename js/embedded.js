@@ -1,4 +1,4 @@
-var origin = '___URI___';
+var origin = 'https://___URI___';
 window.wh = {
 	buildOpts: function(token, opts) {
         var frmParams = ["width","height","src","token","element_id"];
