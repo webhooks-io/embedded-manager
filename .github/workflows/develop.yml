@@ -21,9 +21,9 @@ jobs:
 
     - name: Replace Environment
       env: 
-        URI: "'s/___URI___/embedded-dev.webhooks.io/g'"
+        URI: 'https://embedded-dev.webhooks.io'
       run: |
-        sed -i ${URI} js/embedded.js
+        develop.sh
 
     - name: Push build to S3 and Create Cloudfront Invalidation
       id: build-image

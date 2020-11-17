@@ -1,0 +1,1 @@
+sed -i 's/___URI___/embedded-dev.webhooks.io/g' js/embedded.js
