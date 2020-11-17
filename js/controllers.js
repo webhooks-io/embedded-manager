@@ -226,7 +226,7 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
     $scope.utc_day = moment($scope.year + '-' + $scope.month + '-' + $scope.day + ' 00:00','YYYY-MM-DD HH:mm').utc();
 
     // Last 7 Day stats
-    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, $scope.input_id moment(moment({hour: 0, minute: 0}).subtract('days',7)).utc().format('X'),moment(moment({hour: 0, minute: 0}).add('days',1)).utc().format('X'),'day').success(function(data) {
+    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, $scope.input_id, moment(moment({hour: 0, minute: 0}).subtract('days',7)).utc().format('X'),moment(moment({hour: 0, minute: 0}).add('days',1)).utc().format('X'),'day').success(function(data) {
       $scope.summary = data.summary;
       $scope.detail = data.detail;
 
