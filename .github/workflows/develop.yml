@@ -23,7 +23,7 @@ jobs:
       env: 
         URI: 'https://embedded-dev.webhooks.io'
       run: |
-        sed -i 's/___URI___/${URI}/g' js/embedded.js
+        sed -i 's/___URI___/${{URI}}/g' js/embedded.js
 
     - name: Push build to S3 and Create Cloudfront Invalidation
       id: build-image
