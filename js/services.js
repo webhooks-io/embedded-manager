@@ -55,7 +55,7 @@
                getLog:  function($urlbase, $apiversion, $sub_account_id, $bucket_id, $input_id, $start_date, $end_date) {
                     $http.defaults.useXDomain = true;
                     delete $http.defaults.headers.common['X-Requested-With'];
-                    return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/log?start_date=' + $start_date + '&end_date=' + $end_date + '&bucket_id=' + $bucket_id + '&input_id=' & $input_id ).success(function(result) {
+                    return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/log?start_date=' + $start_date + '&end_date=' + $end_date + '&bucket_id=' + $bucket_id + '&input_id=' + $input_id ).success(function(result) {
                          return result.data;
                     }).error(function(result, status) {
                          return result;
@@ -115,7 +115,7 @@
                getStats: function($urlbase, $apiversion, $sub_account_id, $application_id, $bucket_id, $input_id, $start_date, $end_date, $precision) {
                     $http.defaults.useXDomain = true;
                     delete $http.defaults.headers.common['X-Requested-With'];
-                    return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/stats/overview?application_id=' + $application_id + '&start_date=' + $start_date + '&end_date=' + $end_date + '&precision=' + $precision + '&bucket_id=' + $bucket_id + '&input_id=' & $input_id ).success(function(result) {
+                    return $http.get($urlbase + '/' + $apiversion + '/accounts/' + $sub_account_id + '/stats/overview?application_id=' + $application_id + '&start_date=' + $start_date + '&end_date=' + $end_date + '&precision=' + $precision + '&bucket_id=' + $bucket_id + '&input_id=' + $input_id ).success(function(result) {
                          return result.data;
                     }).error(function(result, status) {
                          return result;
