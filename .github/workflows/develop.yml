@@ -1,0 +1,46 @@
+name: Development Deployment
+
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Replace Environment
+      env: 
+        URI: 'embedded-dev.webhooks.io'
+      run: |
+        sed -i "s/___URI___/$URI/g" js/embedded.js
+
+    - name: Push build to S3 and Create Cloudfront Invalidation
+      id: build-image
+      env:
+        CLOUDFRONT_ID: E1DGL3IOVC40FC
+        S3_BUCKET: 's3://embedded-dev.webhooks.io'
+      run: |
+        # use the aws cli to upload to the appropriate s3 bucket
+        aws s3 sync . ${S3_BUCKET} --acl=public-read
+        # invalidate CloudFront cache
+        aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths '/*'
+
+    - name: Slack notification
+      if: always()
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_AVATAR: https://www.google.com/imgres?imgurl=https%3A%2F%2Fjenkins.io%2Fimages%2Flogos%2Ffire%2Ffire.svg&imgrefurl=https%3A%2F%2Fjenkins.io%2Fartwork%2F&tbnid=ItXCxTMofj2sBM&vet=12ahUKEwjhhZPHwvDnAhWHgZ4KHV2mBSkQMygBegUIARDaAQ..i&docid=dv4-jdMKVUnPMM&w=305&h=356&q=jenkin%20avatar&ved=2ahUKEwjhhZPHwvDnAhWHgZ4KHV2mBSkQMygBegUIARDaAQ
+      uses: Ilshidur/action-slack@master
+      with:
+        args: "${{github.repository}}: build ${{job.status}} on ${{github.ref}}"
