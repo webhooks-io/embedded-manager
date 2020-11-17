@@ -226,7 +226,7 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
     $scope.utc_day = moment($scope.year + '-' + $scope.month + '-' + $scope.day + ' 00:00','YYYY-MM-DD HH:mm').utc();
 
     // Last 7 Day stats
-    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, $scope.input_id, moment(moment({hour: 0, minute: 0}).subtract('days',7)).utc().format('X'),moment(moment({hour: 0, minute: 0}).add('days',1)).utc().format('X'),'day').success(function(data) {
+    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_id, $scope.input_id, moment(moment({hour: 0, minute: 0}).subtract('days',7)).utc().format('X'),moment(moment({hour: 0, minute: 0}).add('days',1)).utc().format('X'),'day').success(function(data) {
       $scope.summary = data.summary;
       $scope.detail = data.detail;
 
@@ -259,7 +259,7 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
           $scope.showError = true;
     });
 
-    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_key, $scope.input_id, moment(moment().subtract('hours',24)).utc().format('X'), moment(moment()).utc().format('X'), 'hour').success(function(data) {
+    consumerService.getStats($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.application_id, $scope.bucket_id, $scope.input_id, moment(moment().subtract('hours',24)).utc().format('X'), moment(moment()).utc().format('X'), 'hour').success(function(data) {
       $scope.summary = data.summary;
       $scope.detail = data.detail;
 
@@ -350,7 +350,7 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
 
     $scope.$watch('date_range', function(newVal) {
         if (newVal) {
-              consumerService.getLog($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.bucket_key, $scope.input_id, moment($scope.start_date).format('X'), moment($scope.end_date).format('X')).success(function(data) {
+              consumerService.getLog($scope.urlbase, $scope.apiversion, $scope.sub_account_id, $scope.bucket_id, $scope.input_id, moment($scope.start_date).format('X'), moment($scope.end_date).format('X')).success(function(data) {
                 $scope.requests = data.results.requests;
               }).error(function(data) {
                     $scope.message = data.message || "Request failed";
