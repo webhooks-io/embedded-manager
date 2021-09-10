@@ -700,14 +700,14 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
                     $scope.retry_count = data.retry_count;
                     $scope.retry_interval = data.retry_interval;
                     
-                    if(data.verify_ssl){
-                        if(data.verify_ssl === true){
+                    if (data.verify_ssl !== undefined && data.verify_ssl !== null) {
+                      if (data.verify_ssl === true) {
                           $scope.verify_ssl = "true";
-                        }else{
+                      } else {
                           $scope.verify_ssl = "false";
-                        }
-                    }else{
-                         $scope.verify_ssl = "true";
+                      }
+                    } else {
+                        $scope.verify_ssl = "true";
                     }
                     $scope.authentication_type = data.authentication.type;
                     $scope.date_created = data.date_created;
