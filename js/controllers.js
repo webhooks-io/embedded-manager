@@ -696,9 +696,9 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
                     $scope.endpoint_url = data.endpoint_url;
                     $scope.delivery_order = data.delivery_order;
                     $scope.transformation = data.transformation;
-                    $scope.retry_policy_id = data.retry_policy_id;
-                    $scope.retry_count = data.retry_count;
-                    $scope.retry_interval = data.retry_interval;
+                    $scope.retry_policy_id = data.retries.policy_id;
+                    $scope.retry_count = data.retries.count;
+                    $scope.retry_interval = data.retries.interval;
                     
                     if (data.verify_ssl !== undefined && data.verify_ssl !== null) {
                       if (data.verify_ssl === true) {
