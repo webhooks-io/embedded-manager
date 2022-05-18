@@ -8,7 +8,7 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
 // ===================================================================
 // Main Controller
 // ===================================================================
-  .controller('WebhookCtrl', ['$scope', '$location', '$http', '$templateCache', 'consumerService', function($scope, $location, $http, $templateCache, consumerService) {
+  .controller('WebhookCtrl', ['$scope', '$location', '$http', '$templateCache', 'consumerService', 'cssInjector', function($scope, $location, $http, $templateCache, consumerService, cssInjector) {
 
     $scope.getURLParams = function() {
 
@@ -55,6 +55,10 @@ angular.module('webhooksio.controllers', ['ngSanitize'])
 
     if($scope.params.show_introduction === undefined) {
       $scope.params.show_introduction = 'no-destinations';
+    }
+
+    if($scope.params.css_url !== undefined && $scope.params.css_url.length > 0) {
+      cssInjector.add($scope.params.css_url);
     }
 
     // Default authorization

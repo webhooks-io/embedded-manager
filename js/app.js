@@ -7,7 +7,8 @@
         'webhooksio.filters',
         'webhooksio.services',
         'webhooksio.directives',
-        'webhooksio.controllers'
+        'webhooksio.controllers',
+        'angular.css.injector'
     ]);
 
     app.filter('trusted', ['$sce', function($sce) {
